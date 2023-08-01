@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:Application xmlns:mx="http://www.adobe.com/2006/mxml" xmlns="*" 
+	layout="vertical"
+	creationComplete = "initApp()" >
+	
+	<mx:Script>
+		<![CDATA[
+			private var myGreeter:Greeter = new Greeter();
+			
+			public function initApp():void 
+			{
+				// says hello at the start, and asks for the user's name
+				mainTxt.text = myGreeter.sayHello();
+			}
+			
+		]]>
+	</mx:Script>
+	
+	<mx:Label id="title" 
+	          fontSize="24" 
+	          fontStyle="bold" 
+	          text="Hello World Enhanced Example" />
+	          
+	<mx:Label id="subtitle" 
+	          fontSize="12" 
+	          text="From Programming ActionScript 3.0, Chapter 2: Getting started with ActionScript" />
+
+	<mx:TextArea id = "mainTxt" width="400" backgroundColor="#DDDDDD" editable="false" />		
+
+	<mx:HBox width="400">	
+		<mx:Label text="User Name:"/>	
+		<mx:TextInput id="userNameTxt" width="100%" enter="mainTxt.text = myGreeter.sayHello(userNameTxt.text);" />
+	</mx:HBox>
+	
+</mx:Application>

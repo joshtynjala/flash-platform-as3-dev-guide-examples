@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:Application xmlns:mx="http://www.adobe.com/2006/mxml"
+		layout="vertical"
+		paddingTop="10" paddingBottom="10" paddingLeft="10" paddingRight="10"
+		creationComplete="initApp()">
+	<mx:Script>
+		<![CDATA[
+			import com.example.programmingas3.introvertIM.IMStatus;
+			import com.example.programmingas3.introvertIM.IMManager;
+			import com.example.programmingas3.introvertIM.IMMessageEvent;
+			
+			private var _manager:IMManager;
+			
+			private function initApp():void
+			{
+				status.dataProvider = IMStatus.allStatuses;
+				status.selectedIndex = 0;
+				_manager = new IMManager(IMStatus(status.selectedItem));
+				_manager.addEventListener(IMMessageEvent.NEW_MESSAGE, newMessageHandler);
+			}
+			
+			
+			// ------- Event Handling -------
+			private function newMessageHandler(event:IMMessageEvent):void
+			{
+				transcript.text += "The Other Person: " + event.message + "\n";
+			}
+			
+			private function sendMessage():void
+			{
+				transcript.text += "You: " + messageText.text + "\n";
+				_manager.sendMessage(messageText.text);
+				messageText.text = "";
+			}
+			
+			private function changeStatus():void
+			{
+				_manager.status = IMStatus(status.selectedItem);
+			}
+		]]>
+	</mx:Script>
+	<mx:Label id="title" text="Introvert IM Example" fontSize="24" fontStyle="bold"/>
+	<mx:Label id="subtitle" text="From Programming ActionScript 3.0, Chapter 25: Using the external API" fontSize="12"/>
+	<mx:HBox width="100%" height="100%">
+		<mx:VBox width="100%" height="100%">
+			<mx:TextArea id="transcript" width="100%" height="100%" editable="false"/>
+			<mx:HBox width="100%">
+				<mx:TextInput id="messageText" width="100%"/>
+				<mx:Button label="Send" click="sendMessage()"/>
+			</mx:HBox>
+		</mx:VBox>
+		<mx:VBox>
+			<mx:Label text="Your status:"/>
+			<mx:ComboBox id="status" change="changeStatus()">
+			</mx:ComboBox>
+		</mx:VBox>
+	</mx:HBox>
+</mx:Application>

@@ -1,0 +1,222 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:VBox xmlns:mx="http://www.adobe.com/2006/mxml"
+    horizontalAlign="center"
+    creationComplete="initComponent()">
+    
+	<mx:Script>
+		<![CDATA[
+		    import mx.collections.XMLListCollection;
+		    import mx.collections.ArrayCollection;
+		    import mx.rpc.events.ResultEvent;
+		    import flash.utils.Timer;
+		    import com.example.programmingas3.podcastplayer.SoundFacade;
+				    
+			public var s:SoundFacade;
+			
+			public var positionTimer:Timer;
+            			
+			public function initComponent():void
+			{
+			    // default to 5 seconds of buffer time instead of 1 second
+                SoundMixer.bufferTime = 5000;
+			}
+			
+			public function load(url:String, title:String = ""):void
+			{
+				if (url != null)
+				{
+				    this.loadingPb.setProgress(0, 1);
+				    this.playingPb.setProgress(0, 1);
+					
+					if (this.s != null && this.s.isPlaying)
+					{
+					    this.s.stop();
+					}
+					
+					this.s = new SoundFacade(url, true, this.autoPlayCb.selected, true, 100000);
+					
+					this.s.addEventListener(flash.events.ProgressEvent.PROGRESS, onLoadProgress);
+					this.s.addEventListener(flash.events.Event.OPEN, onLoadOpen);
+					this.s.addEventListener(flash.events.Event.COMPLETE, onLoadComplete);
+					this.s.addEventListener("playProgress", onPlayProgress);
+					this.s.addEventListener(flash.events.Event.SOUND_COMPLETE, onPlayComplete);
+
+                    this.urlTxt.text = url;
+                    this.titleTxt.text = title;
+                    
+    				if (this.autoPlayCb.selected)
+    				{
+    					playBtn.enabled = false;
+    				}
+    				else
+    				{
+    					playBtn.enabled = true;
+    				}
+    
+    				this.pauseBtn.enabled = false;
+    				this.resumeBtn.enabled = false;
+    				this.stopBtn.enabled = true;
+				}
+			}
+			public function onLoadOpen(evt:Event):void
+			{
+				// none of the properties are available when the open event arrives
+				trace("onLoadOpen");
+				
+    			if (!this.autoPlayCb.selected)
+    			{
+    				playBtn.enabled = true;
+    			}
+			}
+						
+			public function onLoadProgress(evt:ProgressEvent):void
+			{
+				this.loadingPb.setProgress(evt.bytesLoaded, evt.bytesTotal);
+			}
+			
+			public function onLoadComplete(evt:Event):void
+			{
+				// all of the properties are available when the complete event arrives
+				trace("onLoadComplete");
+    			if (this.s.isPlaying)
+    			{
+    				// can't pause until the file is fully loaded
+    				pauseBtn.enabled = true;
+    			}
+			}
+			
+			public function onPlayProgress(evt:ProgressEvent):void
+			{
+				this.playingPb.setProgress(evt.bytesLoaded, evt.bytesTotal);
+			}
+			
+			public function onPlayComplete(evt:Event):void
+			{
+				trace("onPlayComplete");
+				this.playBtn.enabled = true;
+			    this.stopBtn.enabled = false;
+			}
+				
+			public function onPlayBtn(evt:Event):void
+			{
+    			if (this.s != null)
+    			{
+    				this.s.play(); 
+    				this.stopBtn.enabled = true;
+    				if (this.s.isLoaded)
+    				{
+    					this.pauseBtn.enabled = true;
+    					this.resumeBtn.enabled = false;
+    				}
+    			}
+			}
+
+			public function onPauseBtn(evt:Event):void
+			{
+				this.s.pause();
+				
+    			this.playBtn.enabled = true;
+    			this.pauseBtn.enabled = false;
+    			this.resumeBtn.enabled = true;
+			}
+			
+			public function onResumeBtn(evt:Event):void
+			{
+				this.s.resume();
+							
+    			this.pauseBtn.enabled = true;
+    			this.resumeBtn.enabled = false;
+			}
+			
+			public function onStopBtn(evt:Event):void
+			{
+				this.s.stop();
+				this.playingPb.setProgress(0, 1);
+							
+    			this.playBtn.enabled = true;
+    			this.pauseBtn.enabled = false;
+    			this.resumeBtn.enabled = false;
+    			this.stopBtn.enabled = false;
+			}
+			
+			public function onUrlChange(evt:Event):void
+    		{
+    			if (urlTxt.text != "")
+    			{
+    				if (this.s != null)
+    				{
+    					this.s.stop();
+    					this.playingPb.setProgress(0, 1);
+    				}
+    				load(urlTxt.text);
+    			}
+    		}	
+			
+			public function get isPaused():Boolean
+            {
+                if (this.s != null)
+                {
+                    return this.s.isPaused;
+                }
+                else
+                {
+                    return false;
+                }
+            }
+		]]>
+	</mx:Script>
+	
+	<mx:Label text="Sound Player" styleName="headline"/>
+	
+	<mx:HBox width="100%" maxWidth="760">
+		<mx:Label id="urlLbl" text="Now Playing:" textAlign="right" width="90" />
+		<mx:TextInput id="urlTxt" width="100%" enter="onUrlChange(event);" />
+	</mx:HBox>
+	<mx:HBox width="100%" maxWidth="760">
+		<mx:Label id="titleLbl" text="Title:" textAlign="right" width="90" />
+		<mx:Text id="titleTxt" width="100%" />
+	</mx:HBox>
+	
+	<mx:HBox horizontalAlign="center" maxWidth="760">
+		<mx:Button id="playBtn" 
+		    label="Play" 
+		    width="90" 
+		    styleName="playBtn"
+		    click="onPlayBtn(event)"/>
+        <mx:Button id="pauseBtn" 
+            label="Pause" 
+            width="90" 
+            styleName="pauseBtn"
+            enabled="{this.isPaused}"
+            click="onPauseBtn(event)"/>
+        <mx:Button id="resumeBtn" 
+            label="Resume" 
+            width="90" 
+            styleName="resumeBtn"
+            click="onResumeBtn(event)"/>
+		<mx:Button id="stopBtn" 
+		    label="Stop" 
+		    width="90" 
+		    styleName="stopBtn"
+		    click="onStopBtn(event)"/>
+		<mx:CheckBox id="autoPlayCb" 
+		    label="AutoPlay" 
+		    width="100" 
+		    selected="true" />
+	</mx:HBox>
+		
+	<mx:ProgressBar id="loadingPb"  
+	    width="100%" 
+	    maxWidth="760" 
+	    label="Loading" 
+	    mode="manual" 
+	    labelPlacement="left" />
+	
+	<mx:ProgressBar id="playingPb"  
+	    width="100%" 
+	    maxWidth="760" 
+	    label="Playing" 
+	    mode="manual" 
+	    labelPlacement="left" />
+	
+</mx:VBox>

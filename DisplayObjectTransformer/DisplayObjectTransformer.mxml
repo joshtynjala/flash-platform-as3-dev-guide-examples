@@ -1,0 +1,182 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:Application xmlns:mx="http://www.adobe.com/2006/mxml" 
+	xmlns="*" 
+	paddingTop="0"
+	creationComplete="initApp()">
+	
+	<mx:Script>
+		<![CDATA[
+			import com.example.programmingas3.geometry.MatrixTransformer;
+			
+			/**
+			 * Sets up the application.
+			 */
+			public function initApp():void
+			{
+			    resetFields();
+			    setImageMask();
+			}
+			
+			/**
+			 * Creates a mask that matches the dimensions of the imagePanel, to prevent
+			 * the transformed image from covering the rest of the UI.
+			 */
+			public function setImageMask():void
+			{
+			    // create a rectangluar mask shape
+			    var maskImage:Shape = new Shape();
+
+        	    maskImage.graphics.beginFill(0x666666);
+        	    maskImage.graphics.drawRect(0, 0, imagePanel.width, imagePanel.height);
+        	    maskImage.graphics.endFill();
+        	    
+        	    // align the mask with the parent imagePanel
+        	    var maskOrigin:Point = maskImage.globalToLocal(imagePanel.localToGlobal(new Point(0,0)));
+        	    maskImage.x = maskOrigin.x;
+        	    maskImage.y = maskOrigin.y;
+
+			    img.content.mask = maskImage;
+			}
+			
+			/**
+			 * Resets all of the input controls.
+			 */
+			private function resetFields():void 
+			{
+				xScaleSlider.value = 100;
+				yScaleSlider.value = 100;
+				dxSlider.value = 0;
+				dySlider.value = 0;
+				rotationSlider.value = 0;
+				skewSlider.value = 0;
+			}
+			
+			/**
+			 * Resets the matrix transformation of the display object, 
+			 * and then resets the text input fields.
+			 */
+			private function resetTransform():void {
+				img.content.transform.matrix = new Matrix();
+				resetFields();
+			}
+			
+			/**
+			* Transforms the matrix and then applies the matrix to the image.
+			*
+			* Runs the same transformation matrix through successive transformations and then applies
+			* the matrix to the image at the very end, which is more efficient than applying after
+			* each individual transformation.
+			*/
+			private function transformDisplayObject():void 
+			{
+				var tempMatrix:Matrix = img.content.transform.matrix;
+				
+			    // defines the skew type code
+				var skewSide:String = new String;
+				if (skewRight.selected) 
+				{
+					skewSide = "right"; 
+				} 
+				else 
+				{
+					skewSide = "bottom";
+				}
+
+				tempMatrix = MatrixTransformer.transform(tempMatrix, 
+				                                         xScaleSlider.value, 
+				                                         yScaleSlider.value,
+				                                         dxSlider.value, 
+				                                         dySlider.value,
+				                                         rotationSlider.value,
+				                                         skewSlider.value, 
+				                                         skewSide );
+				
+				img.content.transform.matrix = tempMatrix;
+			    
+				//resetFields();
+			}
+		]]>
+	</mx:Script>
+
+	<mx:Label id="title" text="DisplayObject Transformer Example" fontSize="24" fontStyle="bold" />
+	<mx:Label id="subtitle" text="From Programming ActionScript 3.0, Chapter 14: Working with geometry" fontSize="12" />
+
+	<mx:HBox width="100%" height="100%">
+
+	<mx:Panel width="350" height="450" title="Scale, Move, Rotate and Skew" >
+	
+	    <mx:Text textAlign="center" width="100%"
+	             text="Set the values below, then click Transform to see their combined effect on the image to the right." />
+		<mx:Form width="100%" height="100%">
+						
+			<mx:FormItem label="Scale X (%):" horizontalGap="0">
+				<mx:HSlider id="xScaleSlider" width="170" minimum="0" maximum="200" 
+				    tickInterval="20" snapInterval="1" labels="[0,100,200]"/>
+			</mx:FormItem>
+			
+			<mx:FormItem label= "Scale Y (%):">
+				<mx:HSlider id="yScaleSlider" width="170" minimum="0" maximum="200" 
+				    tickInterval="20" snapInterval="1" labels="[0,100,200]"/>
+			</mx:FormItem>
+		
+			<mx:FormItem label="Move X (Pixels):">
+				<mx:HSlider id="dxSlider" width="170" minimum="-100" maximum="100" 
+				    tickInterval="20" snapInterval="1" labels="[-100, 0, 100]"/>
+			</mx:FormItem>
+				
+			<mx:FormItem label="Move Y (Pixels)">
+				<mx:HSlider id="dySlider" width="170" minimum="-100" maximum="100" 
+				    tickInterval="20" snapInterval="1" labels="[-100, 0, 100]"/>
+			</mx:FormItem>
+		
+			<mx:FormItem label="Rotate (°):">
+				<mx:HSlider id="rotationSlider" width="170" minimum="-360" maximum="360" 
+				    tickInterval="90" snapInterval="1" labels="[-360, 0, 360]"/>
+			</mx:FormItem>	
+                        
+            <mx:FormItem label="Skew Mode:">
+                        
+				<mx:RadioButtonGroup id="skewMode" />
+    	
+				<mx:RadioButton groupName="skewMode" 
+      							id="skewRight" 
+    							value="skewRight" 
+    							label="Slide right-hand side down" 
+    							width="170" 
+    							selected="true" />
+    							
+    			<mx:RadioButton groupName="skewMode" 
+    							id="skewBottom" 
+    							value="skewBottom" 
+    							label="Slide bottom side to right" 
+    							width="170" />                           
+            </mx:FormItem>
+
+			<mx:FormItem label="Skew angle (°):">
+			    <mx:HSlider id="skewSlider" width="170" minimum="-90" maximum="90" 
+			        tickInterval="10" snapInterval="1" labels="[-90,0,90]"/>
+			</mx:FormItem>
+						
+		</mx:Form>
+		
+		<mx:ControlBar width="100%" horizontalAlign="center">
+			<mx:Button label="Transform" click="transformDisplayObject()"  />
+			<mx:Button label="Reset" click="resetTransform()" />
+		</mx:ControlBar>
+			
+		</mx:Panel>
+
+		<mx:Panel id="imagePanel"
+		    height="100%"
+			width="100%" 
+    		horizontalAlign="center"
+    		verticalAlign="middle"
+    		title="Image">
+
+			    <mx:Image id="img" scaleContent="true" source="../img/Banana.jpg" />			    
+			
+		</mx:Panel>
+    	    
+	</mx:HBox>
+		
+</mx:Application>

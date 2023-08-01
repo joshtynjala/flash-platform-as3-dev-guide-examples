@@ -1,0 +1,44 @@
+<mx:Application 
+	xmlns:mx="http://www.adobe.com/2006/mxml" 
+	xmlns="*" 
+	layout="vertical"
+	paddingTop="0"
+    horizontalAlign="center"
+	creationComplete="initApp()" >
+		<mx:Script>
+			<![CDATA[
+				import com.example.programmingas3.rssViewer.RSSParser; 
+				
+				/** 
+				* Instantiate an RSSParser object. RSSParser includes methods for
+				* converting RSS XML data into HTML text.
+				**/ 
+				public var rssParser:RSSParser;
+				
+				/**
+				* Sets the title text, description, and output HTML from an RSS feed.
+				*/
+				public function initApp():void {
+					rssParser = new RSSParser();
+					rssParser.addEventListener("dataWritten", onDataReceived)
+				}
+				
+				/**
+				* Called when the rssParser object has completed loading 
+				* of the RSS data.
+				*/
+				public function onDataReceived(e:Event):void {
+					rssTitle.text = "Feed: " + rssParser.rssTitle;
+					rssText.htmlText = rssParser.rssOutput;
+				}
+			]]>
+		</mx:Script>
+		
+		<mx:Label id="title" text="RSS Viewer Example" fontSize="24" fontStyle="bold"/>
+        <mx:Label id="subtitle" text="From Programming ActionScript 3.0, Chapter 10: Working with XML" fontSize="12" />	
+
+		<mx:Label id="rssTitle" fontSize="18" />
+			
+		<mx:TextArea id="rssText" width="600" height="100%" />		
+			
+</mx:Application>

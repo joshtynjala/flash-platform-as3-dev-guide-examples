@@ -1,0 +1,13 @@
+In order to get the sample working without test cases, you will need to:
+- Create a new Zorn Project
+- Point the project path at the "src" folder
+- Add the "ObjectOrientedProgramming/src" folder to the class path
+- Set "StringSample.as" as DocumentRoot
+- If you plan on using the debugger, add a permissions file to your player directory that permits all files in bin to avoid Security problems.
+On my machine, this file is located at:
+
+C:\Documents and Settings\lbayes\Application Data\Macromedia\Flash Player\#Security\FlashPlayerTrust
+
+It can be given any name, it is a text file, and it's contents are (on my machine):
+
+C:\Documents and Settings\[USER-DIR]\My Documents\projects\mm-samples\WorkingWithStrings\bin

@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:Application xmlns:mx="http://www.adobe.com/2006/mxml" 
+	xmlns:example="com.example.programmingas3.clock.*"
+	xmlns="*" 
+	layout="vertical"
+	horizontalAlign="left">
+	
+	<mx:Label id="title" text="SimpleClock Example" fontSize="24" fontStyle="bold" />
+	<mx:Label id="subtitle" text="From Programming ActionsScript 3.0, Chapter 5: Working with dates and times" fontSize="12" />
+
+	<example:SimpleClock id="clock" creationComplete="clock.initClock()"/>
+	 
+</mx:Application>

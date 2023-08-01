@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:Canvas xmlns:mx="http://www.adobe.com/2006/mxml" 
+	xmlns:appc="flexapp.controls.*"
+	implements="com.example.programmingas3.filterWorkbench.IFilterPanel" 
+	left="0" 
+	top="10"
+	creationComplete="setupChildren();">
+	
+	<mx:Script>
+		<![CDATA[
+			import mx.events.ListEvent;
+			import mx.events.SliderEvent;
+			import com.example.programmingas3.filterWorkbench.IFilterFactory;
+			import com.example.programmingas3.filterWorkbench.BlurFactory;
+			
+			// ------- Private vars -------
+			private var _filterFactory:BlurFactory;
+			
+			// ------- Public properties -------
+			public function get filterFactory():IFilterFactory
+			{
+				if (_filterFactory == null)
+				{
+					_filterFactory = new BlurFactory();
+				}
+				
+				return _filterFactory;
+			}
+			
+			
+			// ------- Public methods -------
+			public function resetForm():void
+			{
+				blurXValue.value = 4;
+				blurYValue.value = 4;
+				qualityValue.selectedIndex = 0;
+				
+				if (_filterFactory != null)
+				{
+					_filterFactory.modifyFilter();
+				}
+			}
+			
+			
+			// ------- Event handling -------
+			private function setupChildren():void
+			{
+				// add event listeners for child controls
+				blurXValue.addEventListener(SliderEvent.CHANGE, changeFilterValue);
+				blurYValue.addEventListener(SliderEvent.CHANGE, changeFilterValue);
+				qualityValue.addEventListener(ListEvent.CHANGE, changeFilterValue);
+			}
+			
+			
+			private function changeFilterValue(event:Event):void
+			{
+				// update the filter
+				updateFilter();
+			}
+			
+			
+			// ------- Private methods -------
+			private function updateFilter():void
+			{
+				var blurX:Number = blurXValue.value;
+				var blurY:Number = blurYValue.value;
+				var quality:int = qualityValue.selectedItem.data;
+				
+				_filterFactory.modifyFilter(blurX, blurY, quality);
+			}
+		]]>
+	</mx:Script>
+	
+	<mx:Form x="30">
+		<mx:FormItem label="Blur X:">
+			<mx:HSlider id="blurXValue" minimum="0" maximum="255" snapInterval="1" value="4" dataTipOffset="3" dataTipPrecision="0" liveDragging="true"/>
+		</mx:FormItem>
+		<mx:FormItem label="Blur Y:">
+			<mx:HSlider id="blurYValue" minimum="0" maximum="255" snapInterval="1" value="4" dataTipOffset="3" dataTipPrecision="0" liveDragging="true"/>
+		</mx:FormItem>
+		<mx:Spacer/>
+		<mx:FormItem label="Quality:">
+			<appc:QualityComboBox id="qualityValue"/>
+		</mx:FormItem>
+	</mx:Form>
+	
+	
+</mx:Canvas>

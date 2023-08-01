@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:Application xmlns:mx="http://www.adobe.com/2006/mxml"
+    layout="vertical">
+    
+    <mx:Script>
+        <![CDATA[
+            import com.example.programmingas3.socket.Telnet;
+            private var telnetClient:Telnet;
+            private function connect():void {
+                telnetClient = new Telnet(serverName.text, int(portNumber.text), output);
+                console.title = "Connecting to " + serverName.text + ":" + portNumber.text;
+                console.enabled = true;
+            }
+            private function sendCommand():void {
+                var ba:ByteArray = new ByteArray();
+                ba.writeMultiByte(command.text + "\n", "UTF-8");
+                telnetClient.writeBytesToSocket(ba);
+                command.text = "";
+            }
+        ]]>
+    </mx:Script>
+    
+    <mx:Label id="title" text="Telnet Socket Example" fontSize="24" fontStyle="bold" />
+    <mx:Label id="subtitle" text="From Programming ActionScript 3.0, Chapter 22: Networking and communication" fontSize="12" />
+
+    <mx:ApplicationControlBar width="100%">
+        <mx:Label text="Server:" />
+        <mx:TextInput id="serverName" width="100%" />
+        <mx:Spacer />
+        <mx:Label text="Port:" />
+        <mx:TextInput id="portNumber" text="23" textAlign="right" maxChars="5" restrict="0-9" />
+        <mx:Spacer />
+        <mx:Button label="Login" click="connect();" />
+    </mx:ApplicationControlBar>
+
+    <mx:Spacer />
+
+    <mx:Panel id="console" enabled="false" width="100%" height="100%" paddingTop="10" paddingBottom="10" paddingLeft="10" paddingRight="10">
+        <mx:TextArea id="output" editable="false" width="100%" height="100%" fontFamily="Courier New" />
+        <mx:ControlBar>
+            <mx:Label text="Command:" />
+            <mx:TextInput id="command" width="100%" enter="sendCommand();" />
+            <mx:Button label="Send" click="sendCommand();" />
+        </mx:ControlBar>
+    </mx:Panel>
+
+</mx:Application>

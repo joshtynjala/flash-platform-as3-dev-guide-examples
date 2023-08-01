@@ -1,0 +1,6 @@
+FILENAME	TITLE	WHITE_THRESHHOLD	BLACK_THRESHHOLD
+FruitBasket.jpg	Pear, apple, orange, and banana	d8	10
+Banana.jpg	A picture of a banana	C8	20
+Orange.jpg	orange	FF	20
+Apple.jpg	picture of an apple	6E	10
+Pear.jpg	pear	0xBB	0x30

@@ -1,0 +1,169 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:Application xmlns:mx="http://www.adobe.com/2006/mxml" 
+				layout="vertical" 
+				xmlns:flexui="com.example.programmingas3.stockticker.flex.*" 
+				applicationComplete="init()"  
+				xmlns:stockticker="com.example.programmingas3.stockticker.*" >
+	<mx:Script>
+	<![CDATA[
+		/** 
+		 * This is the Flex and Flash Builder version of the UI and controller for the
+		 * Global Stock Ticker example in the ActionScript 3.0 Developer's Guide.
+		 * 
+		 * If you are using Flash Professional you do not need this file. 
+		 * The UI and control will be handled in the file flash/GlobalStockTicker.as.
+		 */
+		
+		import com.example.programmingas3.stockticker.Localizer;
+		import com.example.programmingas3.stockticker.StockDataModel;
+		
+		import flash.globalization.CollatorMode;
+		import flash.globalization.CurrencyFormatter;
+		import flash.globalization.DateTimeFormatter;
+		import flash.globalization.DateTimeNameStyle;
+		import flash.globalization.NumberFormatter;
+		
+		import mx.collections.ArrayCollection;
+		import mx.events.ListEvent;
+		
+		public var localizer:Localizer;
+		public var stockData:StockDataModel;
+		
+		public var currentLocale:String;
+		public var marketIndex:int = 0;
+		
+		public function init():void
+		{
+			stockData = new StockDataModel();
+			localeList.dataProvider = stockData.locales;
+			marketList.dataProvider = stockData.markets;
+			localeList.selectedIndex = 3;
+			
+			// select US market by default	
+			currentLocale = "en-US";
+			localizer = new Localizer();
+			
+			// specify USD for the initial currency
+			localizer.setFormatProperties(2, "USD", "$");
+			 
+			loadCurrentLocale();
+			
+			// set the company data provider to the list of US companies
+			companyGrid.dataProvider = stockData.stocks[marketIndex];
+			companyGrid.selectedIndex = 0;
+			
+			graph.init();
+		}
+		
+		public function loadCurrentLocale():void
+		{
+			localizer.setLocale(currentLocale);
+			currentTimeTxt.text = localizer.formatDate(new Date());	
+			month1Txt.text = localizer.monthNames[3];
+			month2Txt.text = localizer.monthNames[4];
+			month3Txt.text = localizer.monthNames[5];
+			month4Txt.text = localizer.monthNames[6];
+			month5Txt.text = localizer.monthNames[7];
+			month6Txt.text = localizer.monthNames[8];
+		}		
+		
+		private function displayVolume(item:Object, col:DataGridColumn):String
+     	{
+       		return localizer.formatNumber(item.volume, 0);
+     	}
+
+		private function displayPercent(item:Object, col:DataGridColumn):String
+     	{
+       		return localizer.formatPercent(item.change);
+     	}
+     	
+		private function displayPrice(item:Object, col:DataGridColumn):String
+     	{
+       		return localizer.formatCurrency(item.price);
+     	}
+     
+        private function onLocaleSelected(event:ListEvent):void 
+		{
+        	if( event.target.selectedItem )
+			{
+        		currentLocale = event.target.selectedItem.data;
+			}
+        	else
+			{
+        		currentLocale = localeList.text;
+			}
+        	loadCurrentLocale();
+			// reload company data
+			companyGrid.dataProvider = stockData.stocks[marketIndex];
+        }   
+
+        private function onMarketSelected(event:ListEvent):void 
+		{
+			localizer.setFormatProperties(event.target.selectedItem.fraction,
+				event.target.selectedItem.currency,
+				event.target.selectedItem.symbol);
+			loadCurrentLocale();
+			
+			var rowIndex:int = event.target.selectedIndex as int;
+			if (rowIndex >= 0 && rowIndex < stockData.stocks.length)
+			{
+				marketIndex = rowIndex;
+				// reload company data
+				companyGrid.dataProvider = stockData.stocks[marketIndex];
+			}
+  		}
+		
+		private function onCompanySelected(event:ListEvent):void 
+		{
+			graph.redraw();
+		}
+		
+	]]>
+    </mx:Script>
+
+	<mx:Label text="Global Stock Ticker Example" styleName="header1"/>
+	<mx:Text text="From the ActionScript 3.0 Developer's Guide: Internationalizing Applications" styleName="header2"/>
+	
+	<mx:VBox width="100%" height="100%"  styleName="applicationBox" >
+		<mx:HBox width="100%">
+			<mx:Label id="currentTimeTxt" width="100%" minWidth="150" maxWidth="300"/>
+			
+			<mx:Label text="Locale:" textAlign="right" width="80"/>
+			<mx:ComboBox id="localeList" 
+						 width="170" 
+						 change="onLocaleSelected(event)"  />
+			
+			<mx:Label text="Market:" textAlign="right" width="80"/>
+			<mx:ComboBox id="marketList"
+						 width="150" 
+						 change="onMarketSelected(event)" />
+		</mx:HBox>
+
+
+		<mx:DataGrid id="companyGrid" 
+					 change="onCompanySelected(event)" 
+					 width="100%"  
+					 borderStyle="solid" 
+					 borderColor="#000000" 
+					 >
+			<mx:columns>
+				<mx:DataGridColumn headerText="Company" dataField="ticker" width="100"/>
+				<mx:DataGridColumn headerText="Volume" labelFunction="displayVolume"  textAlign="right" />
+				<mx:DataGridColumn headerText="Price"  labelFunction="displayPrice"   textAlign="right" />
+				<mx:DataGridColumn headerText="Change" labelFunction="displayPercent" textAlign="right" />
+			</mx:columns>
+		</mx:DataGrid>
+
+		<flexui:FinGraph id="graph" width="100%" height="100%" graphColor="#ffffff"/>
+		
+		<mx:HBox width="100%">
+			<mx:Label id="month1Txt" textAlign="center" width="100%"/>
+			<mx:Label id="month2Txt" textAlign="center" width="100%"/>
+			<mx:Label id="month3Txt" textAlign="center" width="100%"/>
+			<mx:Label id="month4Txt" textAlign="center" width="100%"/>
+			<mx:Label id="month5Txt" textAlign="center" width="100%"/>
+			<mx:Label id="month6Txt" textAlign="center" width="100%"/>
+		</mx:HBox>
+	</mx:VBox>
+
+</mx:Application>

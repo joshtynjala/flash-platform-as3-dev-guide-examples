@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:Application xmlns:mx="http://www.adobe.com/2006/mxml" xmlns:example="com.example.programmingas3.fileio.*" xmlns="*" horizontalAlign="center">
+ 	<mx:Label id="title" text="File I/O Example" fontSize="24" fontStyle="bold" />
+	<mx:Text id="subtitle" text="From Programming ActionScript 3.0, Chapter 22: Networking and communication" width="100%" textAlign="center" fontSize="12" />
+
+	<example:FileUpload id="fileUpload" creationComplete="fileUpload.init(uploadProgress, cancelUpload);" />
+	<example:FileDownload id="fileDownload" creationComplete="fileDownload.init(downloadProgress, cancelDownload);" />
+	<mx:HBox>
+		<mx:Panel title="Upload File" paddingTop="10" paddingBottom="10" paddingLeft="10" paddingRight="10">
+			<mx:ProgressBar id="uploadProgress" label="" mode="manual" />
+			<mx:ControlBar horizontalAlign="right">
+				<mx:Button id="startUpload" label="Upload..." click="fileUpload.startUpload();" />
+				<mx:Button id="cancelUpload" label="Cancel" click="fileUpload.cancelUpload();" enabled="false" />
+			</mx:ControlBar>
+		</mx:Panel>
+		<mx:Panel title="Download File" paddingTop="10" paddingBottom="10" paddingLeft="10" paddingRight="10">
+			<mx:ProgressBar id="downloadProgress" label="" mode="manual" />
+			<mx:ControlBar horizontalAlign="right">
+				<mx:Button id="startDownload" label="Download..." click="fileDownload.startDownload();" />
+				<mx:Button id="cancelDownload" label="Cancel" click="fileDownload.cancelDownload();" enabled="false" />
+			</mx:ControlBar>
+		</mx:Panel>
+	</mx:HBox>
+</mx:Application>

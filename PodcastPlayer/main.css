@@ -1,0 +1,74 @@
+/* Components */
+
+Application {
+   background-color: #FFFFFF;
+   font-family: "Verdana, Arial, Helvitica, sans-serif";
+   font-size: 12;
+   font-weight:normal;
+   horizontalAlign: "center";
+   themeColor: #6699DD;
+   
+ }
+   
+Text {
+	font-size: 12;
+	font-weight: normal;
+    color: #333333;
+}
+
+.headline {
+	font-size: 20;
+	font-weight: bold;
+    color: #333333;
+}
+
+.smallText {
+	font-size: 10;
+	font-weight: normal;
+    color: #333333;
+}
+
+.linkText {
+	font-size: 12;
+	font-weight: normal;
+	text-decoration: underline;
+    color: #3333CC;
+}
+.uiBox {
+    border-style: solid;
+    border-color: #CCCCCC;
+    padding-left: 4px;
+    padding-right: 4px;
+    padding-top: 5px;
+    padding-bottom: 5px;
+    background-color: #FFFFFF;
+    background-alpha: 0.5;
+}
+
+CheckBox {
+   theme-color: #ff9999;
+   color: #666666;
+   text-roll-over-color: #999999;
+   fill-colors: #ffcccc, #ffffff;
+}
+
+Button {
+   border-thickness: 0;
+   corner-radius: 10;
+   fill-colors: #4477AA, #225588;
+   color: #ffffff;
+   text-roll-over-color: #FFFFFF;
+   text-selected-color: #4477AA;
+}
+.playBtn {
+	icon: Embed("images/play_25.png");
+}
+.pauseBtn {
+	icon: Embed("images/pause_25.png");
+}
+.resumeBtn {
+	icon: Embed("images/resume_25.png");
+}
+.stopBtn {
+	icon: Embed("images/stop_25.png");
+}

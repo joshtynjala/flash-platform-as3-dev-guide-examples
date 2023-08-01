@@ -1,0 +1,180 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<rss version='2.0' xmlns:dc='http://purl.org/dc/elements/1.1/'> 
+<channel>
+<title>Alaska - Current Watches, Warnings and Advisories for Alaska Issued by the National Weather Service</title>
+<link>http://www.weather.gov/alerts/ak.html</link>
+<lastBuildDate>Tue, 07 Feb 2006 17:28:01 EST</lastBuildDate>
+<ttl>4</ttl>
+<language>en-us</language>
+<managingEditor>robert.bunge@noaa.gov</managingEditor>
+<webMaster>w-nws.webmaster@noaa.gov</webMaster>
+<description>
+Current Watches, Warnings and Advisories for Alaska Issued by the National Weather Service
+</description>
+<image>
+<url>http://weather.gov/images/xml_logo.gif</url>
+<title>NOAA - National Weather Service</title>
+<link>http://weather.gov</link>
+</image> 
+<item>
+<title>Short Term Forecast - Cape Fairweather to Cape Suckling Coastal Area (Alaska)</title>
+<link>http://www.weather.gov/alerts/ak.html#AKZ017.AYANOWYAK.221600</link>
+<description>
+Short Term Forecast
+Issued At:  2006-02-07T22:16:00
+Expired At:  2006-02-08T04:00:00
+Issuing Weather Forecast Office Homepage:  http://paya.arh.noaa.gov
+</description>
+</item>
+<item>
+<title>Short Term Forecast - Taiya Inlet, Klondike Highway (Alaska)</title>
+<link>http://www.weather.gov/alerts/ak.html#AKZ018.AJKNOWAJK.212400</link>
+<description>
+Short Term Forecast
+Issued At:  2006-02-07T21:24:00
+Expired At:  2006-02-08T01:00:00
+Issuing Weather Forecast Office Homepage:  http://pajk.arh.noaa.gov
+</description>
+</item>
+<item>
+<title>Short Term Forecast - Haines Borough, Lynn Canal (Alaska)</title>
+<link>http://www.weather.gov/alerts/ak.html#AKZ019.AJKNOWAJK.212400</link>
+<description>
+Short Term Forecast
+Issued At:  2006-02-07T21:24:00
+Expired At:  2006-02-08T01:00:00
+Issuing Weather Forecast Office Homepage:  http://pajk.arh.noaa.gov
+</description>
+</item>
+<item>
+<title>Short Term Forecast - Glacier Bay (Alaska)</title>
+<link>http://www.weather.gov/alerts/ak.html#AKZ020.AJKNOWAJK.212400</link>
+<description>
+Short Term Forecast
+Issued At:  2006-02-07T21:24:00
+Expired At:  2006-02-08T01:00:00
+Issuing Weather Forecast Office Homepage:  http://pajk.arh.noaa.gov
+</description>
+</item>
+<item>
+<title>Short Term Forecast - Glacier Bay (Alaska)</title>
+<link>http://www.weather.gov/alerts/ak.html#AKZ021.AJKNOWAJK.212400</link>
+<description>
+Short Term Forecast
+Issued At:  2006-02-07T21:24:00
+Expired At:  2006-02-08T01:00:00
+Issuing Weather Forecast Office Homepage:  http://pajk.arh.noaa.gov
+</description>
+</item>
+<item>
+<title>Short Term Forecast - Cape Fairweather to Cape Suckling (Alaska)</title>
+<link>http://www.weather.gov/alerts/ak.html#AKZ022.AJKNOWAJK.212400</link>
+<description>
+Short Term Forecast
+Issued At:  2006-02-07T21:24:00
+Expired At:  2006-02-08T01:00:00
+Issuing Weather Forecast Office Homepage:  http://pajk.arh.noaa.gov
+</description>
+</item>
+<item>
+<title>Short Term Forecast - Cape Decision to Cape Fairweather (Alaska)</title>
+<link>http://www.weather.gov/alerts/ak.html#AKZ023.AJKNOWAJK.212400</link>
+<description>
+Short Term Forecast
+Issued At:  2006-02-07T21:24:00
+Expired At:  2006-02-08T01:00:00
+Issuing Weather Forecast Office Homepage:  http://pajk.arh.noaa.gov
+</description>
+</item>
+<item>
+<title>Short Term Forecast - Northern Lynn Canal (Alaska)</title>
+<link>http://www.weather.gov/alerts/ak.html#AKZ024.AJKNOWAJK.212400</link>
+<description>
+Short Term Forecast
+Issued At:  2006-02-07T21:24:00
+Expired At:  2006-02-08T01:00:00
+Issuing Weather Forecast Office Homepage:  http://pajk.arh.noaa.gov
+</description>
+</item>
+<item>
+<title>Short Term Forecast - Juneau Borough, Western Chichagof, Admiralty Island (Alaska)</title>
+<link>http://www.weather.gov/alerts/ak.html#AKZ025.AJKNOWAJK.212400</link>
+<description>
+Short Term Forecast
+Issued At:  2006-02-07T21:24:00
+Expired At:  2006-02-08T01:00:00
+Issuing Weather Forecast Office Homepage:  http://pajk.arh.noaa.gov
+</description>
+</item>
+<item>
+<title>Short Term Forecast - Inner Channels from Kupreanof Island to Etolin Island (Alaska)</title>
+<link>http://www.weather.gov/alerts/ak.html#AKZ026.AJKNOWAJK.212400</link>
+<description>
+Short Term Forecast
+Issued At:  2006-02-07T21:24:00
+Expired At:  2006-02-08T01:00:00
+Issuing Weather Forecast Office Homepage:  http://pajk.arh.noaa.gov
+</description>
+</item>
+<item>
+<title>Short Term Forecast - Southern Inner Channels (Alaska)</title>
+<link>http://www.weather.gov/alerts/ak.html#AKZ027.ANTNOWANN.211600</link>
+<description>
+Short Term Forecast
+Issued At:  2006-02-07T21:16:00
+Expired At:  2006-02-08T00:00:00
+Issuing Weather Forecast Office Homepage:  http://pant.arh.noaa.gov
+</description>
+</item>
+<item>
+<title>Short Term Forecast - Dixon Entrance to Cape Decision (Alaska)</title>
+<link>http://www.weather.gov/alerts/ak.html#AKZ028.ANTNOWANN.211600</link>
+<description>
+Short Term Forecast
+Issued At:  2006-02-07T21:16:00
+Expired At:  2006-02-08T00:00:00
+Issuing Weather Forecast Office Homepage:  http://pant.arh.noaa.gov
+</description>
+</item>
+<item>
+<title>Short Term Forecast - Misty Fjords (Alaska)</title>
+<link>http://www.weather.gov/alerts/ak.html#AKZ029.ANTNOWANN.211600</link>
+<description>
+Short Term Forecast
+Issued At:  2006-02-07T21:16:00
+Expired At:  2006-02-08T03:00:00
+Issuing Weather Forecast Office Homepage:  http://pant.arh.noaa.gov
+</description>
+</item>
+<item>
+<title>Short Term Forecast - Northeast Prince William Sound (Alaska)</title>
+<link>http://www.weather.gov/alerts/ak.html#AKZ131.AVWNOWVWS.215300</link>
+<description>
+Short Term Forecast
+Issued At:  2006-02-07T21:53:00
+Expired At:  2006-02-08T03:00:00
+Issuing Weather Forecast Office Homepage:  http://pavw.arh.noaa.gov
+</description>
+</item>
+<item>
+<title>Short Term Forecast - Southern Seward Peninsula Coast (Alaska)</title>
+<link>http://www.weather.gov/alerts/ak.html#AKZ211.AOMNOWOME.192500</link>
+<description>
+Short Term Forecast
+Issued At:  2006-02-07T19:25:00
+Expired At:  2006-02-08T01:00:00
+Issuing Weather Forecast Office Homepage:  http://paom.arh.noaa.gov
+</description>
+</item>
+<item>
+<title>Short Term Forecast - Middle Tanana Valley (Alaska)</title>
+<link>http://www.weather.gov/alerts/ak.html#AKZ222.AFGNOWAFG.205700</link>
+<description>
+Short Term Forecast
+Issued At:  2006-02-07T20:57:00
+Expired At:  2006-02-08T02:00:00
+Issuing Weather Forecast Office Homepage:  http://pafg.arh.noaa.gov
+</description>
+</item>
+</channel>
+</rss>

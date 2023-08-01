@@ -1,0 +1,169 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:Application xmlns:mx="http://www.adobe.com/2006/mxml" 
+    xmlns:example="*" 
+    layout="vertical"
+    creationComplete="initApp()">
+    
+    <mx:Style source="main.css" />
+       
+    <mx:Script>
+        <![CDATA[
+        import com.example.programmingas3.podcastplayer.RSSItem;
+        import com.example.programmingas3.utils.DateUtil;
+        import com.example.programmingas3.podcastplayer.URLService;
+        import com.example.programmingas3.podcastplayer.RSSChannel;
+        import mx.events.CloseEvent;
+        import mx.controls.Alert;
+        
+        public var service:URLService;
+        
+  
+        public var feeds:XMLList;
+        public var articles:XMLList;
+        
+        public var currentFeed:RSSChannel;
+        
+        public function initApp():void
+        {
+            feedList.addEventListener(Event.CHANGE, onFeedSelected); 
+            
+            var configService:URLService = new URLService("playerconfig.xml");
+    		configService.addEventListener(DataEvent.DATA, onConfigReceived);
+    		configService.addEventListener(IOErrorEvent.IO_ERROR, onFeedError);
+    		configService.addEventListener(SecurityErrorEvent.SECURITY_ERROR, onFeedError);
+    		configService.send();
+        }
+    
+        public function onFeedSelected(event:Event):void
+        {
+        	var url:String = feedList.selectedItem.url.toString();
+        	if (url != null)
+        	{
+        		service = new URLService(url);
+        		service.addEventListener(DataEvent.DATA, onFeedReceived);
+        		service.addEventListener(IOErrorEvent.IO_ERROR, onFeedError);
+        		service.addEventListener(SecurityErrorEvent.SECURITY_ERROR, onFeedError);
+        		service.send();
+        	}
+        }
+
+        public function onConfigReceived(event:DataEvent):void
+        {
+        	var result:XML = new XML(event.data);
+        	this.feeds = result.feed;
+        	
+        	this.feedList.dataProvider = feeds;
+        	this.feedList.selectedIndex = 0;
+            this.feedList.dispatchEvent(new Event(Event.CHANGE));
+        }
+                    
+        public function onFeedReceived(event:DataEvent):void
+        {
+        	var result:XML = new XML(event.data);
+        	
+        	var channelXML:XMLList = result.child("channel");
+        	if (channelXML != null)
+			{
+			    this.currentFeed = RSSChannel.parseFeed(channelXML[0]);
+			   
+			    if (this.currentFeed != null)
+			    {
+				    this.articleGrid.dataProvider = this.currentFeed.items;
+				    this.feedImg.source = this.currentFeed.imageUrl;
+				
+				    this.feedDescriptionTxt.htmlText = this.currentFeed.getDescriptionHTML();
+			    }
+			}
+        }
+        
+        public function onFeedError(event:ErrorEvent):void
+        {
+            showError(new Error(event.text));
+        }
+        
+		/**
+		 * A common method for displaying error messages.
+		 * Currently it just shows the message in an Alert control
+		 * Tracing or logging of errors can be added here.
+		 * Based on the severity of the error other actions could be taken as well.
+		 */		
+		public function showError(e:Error):void
+		{
+			var a:Alert = Alert.show(e.message, "An Error Occurred", 4.0, this, onAlertClosed);
+		}
+		
+		/**
+		 * Called when the error alert is closed. In the future, based on whether the error was
+		 * fatal or just a warning, this method could end up quitting the application.
+		 */				
+		public function onAlertClosed(event:CloseEvent):void
+		{
+			trace("The error alert was closed.");
+		}
+		
+		/**
+		 * Called when the Play button is clicked inside a row of the grid.
+		 */
+		public function onGridPlay(url:String):void
+		{
+		    url = articleGrid.selectedItem.soundUrl;
+		    var title:String = articleGrid.selectedItem.title;
+		    if (url != null)
+		    {
+    		    this.player.load(url);
+    		}
+		}
+		
+		public function formatDateColumn(item:Object,col:DataGridColumn):String
+		{
+		    // remove milliseconds
+			var dateStr:String = DateUtil.formatShort(item[col.dataField]);
+			return dateStr;
+		}
+		
+		public function formatDurationColumn(item:Object,col:DataGridColumn):String
+		{
+		    var durStr:String = (item as RSSItem).getDuration();
+		    return durStr as String;
+		}
+        ]]>
+    </mx:Script>
+
+	<mx:Label id="title" text="Podcast Player Example" fontSize="24" fontStyle="bold" />
+	<mx:Label id="subtitle" text="From Programming ActionScript 3.0, Chapter 20: Working with sound" fontSize="12" />
+    
+    <mx:HBox width="100%" maxWidth="800" horizontalAlign="left">
+        <mx:VBox width="320" height="100%">      
+            <mx:Label text="Select a Podcast Feed:" width="150" textAlign="left" />
+            <mx:List id="feedList" width="320" height="175" labelField="label" />  
+        </mx:VBox> 
+        <mx:HBox width="100%" styleName="uiBox"> 
+            <mx:Image id="feedImg" height="100%" maxHeight="190" maxWidth="200" scaleContent="true" maintainAspectRatio="true"  />
+            <mx:TextArea id="feedDescriptionTxt" width="100%" height="190" borderStyle="none" backgroundAlpha="0.0" />
+        </mx:HBox>
+    </mx:HBox>
+    
+    <mx:DataGrid id="articleGrid" width="100%" maxWidth="800" height="306">
+        <mx:columns>
+            <mx:DataGridColumn dataField="publishDate" headerText="Date" width="150" labelFunction="formatDateColumn" />
+            <mx:DataGridColumn dataField="title" headerText="Title" width="280" />
+            <mx:DataGridColumn dataField="duration" headerText="Duration" width="70" labelFunction="formatDurationColumn" />
+            <mx:DataGridColumn headerText="Play" textAlign="center" width="90" resizable="false">
+                <mx:itemRenderer>
+                    <mx:Component>
+                        <mx:HBox horizontalAlign="center">
+                            <mx:Button width="75" 
+                                label="Play" 
+                                toolTip="{data.soundUrl}" 
+                                styleName="playBtn"
+                                click="outerDocument.onGridPlay(this.toolTip)" />
+                        </mx:HBox>
+                    </mx:Component>
+                </mx:itemRenderer>
+            </mx:DataGridColumn>
+        </mx:columns>
+    </mx:DataGrid>
+    
+    <example:SoundPlayer id="player" width="100%" maxWidth="800" styleName="uiBox" />
+    
+</mx:Application>

@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:Canvas xmlns:mx="http://www.adobe.com/2006/mxml" creationComplete="init()">
+	
+	<mx:Script>
+		<![CDATA[
+			import com.example.programmingas3.stockticker.FinancialGraph;
+			
+			import mx.core.UIComponent;
+			import mx.events.ResizeEvent;
+			
+			public var graph:FinancialGraph;
+			
+			public var graphColor:Number = 0x8080ff;
+			
+			public function init():void
+			{
+				trace("FinGraph.init()");
+				graph = new FinancialGraph(this.width, this.height, graphColor);
+				var graphRef:UIComponent = new UIComponent();
+				addChild(graphRef);
+				graphRef.addChild(graph);
+				
+				addEventListener(mx.events.ResizeEvent.RESIZE, onResize);
+			}
+			
+			public function onResize(evt:ResizeEvent):void
+			{
+				graph.graphWidth = this.width;
+				graph.graphHeight = this.height;
+				redraw();
+			}
+			
+			public function redraw():void
+			{
+				graph.redraw();
+			}
+		]]>
+	</mx:Script>
+</mx:Canvas>

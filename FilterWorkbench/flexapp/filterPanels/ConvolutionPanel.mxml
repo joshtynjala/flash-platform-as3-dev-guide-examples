@@ -1,0 +1,265 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:Canvas xmlns:mx="http://www.adobe.com/2006/mxml" 
+	xmlns:appc="flexapp.controls.*"
+	implements="com.example.programmingas3.filterWorkbench.IFilterPanel" 
+	right="0" 
+	top="0"
+	creationComplete="setupChildren();">
+	
+	<mx:Script>
+		<![CDATA[
+			import com.example.programmingas3.filterWorkbench.IFilterFactory;
+			import com.example.programmingas3.filterWorkbench.ConvolutionFactory;
+
+			import mx.collections.ArrayCollection;
+			import mx.events.ColorPickerEvent;
+			import mx.events.SliderEvent;
+			
+			// ------- Constants -------
+			public const matrixXValue:Number = 3;
+			public const matrixYValue:Number = 3;
+			
+			// --- Presets ---
+			private static const NONE:String = "none";
+			private static const SHIFT_LEFT:String = "shiftLeft";
+			private static const SHIFT_UP:String = "shiftUp";
+			private static const BLUR:String = "blur";
+			private static const ENHANCE:String = "enhance";
+			private static const SHARPEN:String = "sharpen";
+			private static const CONTRAST:String = "contrast";
+			private static const EMBOSS:String = "emboss";
+			private static const EDGE_DETECT:String = "edge";
+			private static const HORIZONTAL_EDGE:String = "hEdge";
+			private static const VERTICAL_EDGE:String = "vEdge";
+		
+		
+			// ------- Private vars -------
+			private var _filterFactory:ConvolutionFactory;
+			
+			// ------- Public properties -------
+			public function get filterFactory():IFilterFactory
+			{
+				if (_filterFactory == null)
+				{
+					_filterFactory = new ConvolutionFactory();
+				}
+				
+				return _filterFactory;
+			}
+			
+			
+			// ------- Public methods -------
+			public function resetForm():void
+			{
+				setPreset("0", "0", "0", "0", "1", "0", "0", "0", "0", "1", "0", true);
+				alphaValue.value = 0;
+				clampValue.selected = true;
+				colorValue.selectedColor = 0x000000;
+				presetChooser.selectedIndex = -1;
+				
+				if (_filterFactory != null)
+				{
+					_filterFactory.modifyFilter();
+				}
+			}
+			
+			
+			// ------- Event handling -------
+			private function setupChildren():void
+			{
+				// populate the preset chooser combo box
+				var presetList:ArrayCollection = new ArrayCollection();
+				presetList.addItem({label:"None", data:NONE});
+				presetList.addItem({label:"Shift pixels left", data:SHIFT_LEFT});
+				presetList.addItem({label:"Shift pixels up", data:SHIFT_UP});
+				presetList.addItem({label:"Blur", data:BLUR});
+				presetList.addItem({label:"Enhance", data:ENHANCE});
+				presetList.addItem({label:"Sharpen", data:SHARPEN});
+				presetList.addItem({label:"Add Contrast", data:CONTRAST});
+				presetList.addItem({label:"Emboss", data:EMBOSS});
+				presetList.addItem({label:"Edge detect", data:EDGE_DETECT});
+				presetList.addItem({label:"Horizontal edge detect", data:HORIZONTAL_EDGE});
+				presetList.addItem({label:"Vertical edge detect", data:VERTICAL_EDGE});
+				presetChooser.dataProvider = presetList;
+				
+				// add event listeners for child controls
+				presetChooser.addEventListener(Event.CHANGE, choosePreset);
+				
+				matrixTL.addEventListener(Event.CHANGE, changeFilterValue);
+				matrixTC.addEventListener(Event.CHANGE, changeFilterValue);
+				matrixTR.addEventListener(Event.CHANGE, changeFilterValue);
+				matrixML.addEventListener(Event.CHANGE, changeFilterValue);
+				matrixMC.addEventListener(Event.CHANGE, changeFilterValue);
+				matrixMR.addEventListener(Event.CHANGE, changeFilterValue);
+				matrixBL.addEventListener(Event.CHANGE, changeFilterValue);
+				matrixBC.addEventListener(Event.CHANGE, changeFilterValue);
+				matrixBR.addEventListener(Event.CHANGE, changeFilterValue);
+				divisorValue.addEventListener(Event.CHANGE, changeFilterValue);
+				biasValue.addEventListener(Event.CHANGE, changeFilterValue);
+				colorValue.addEventListener(ColorPickerEvent.CHANGE, changeNonPresetValue);
+				alphaValue.addEventListener(SliderEvent.CHANGE, changeNonPresetValue);
+				clampValue.addEventListener(MouseEvent.CLICK, changeNonPresetValue);
+				preserveAlphaValue.addEventListener(MouseEvent.CLICK, changeFilterValue);
+			}
+			
+			
+			private function choosePreset(event:Event):void
+			{
+				// populate the form values according to the selected preset
+				switch (presetChooser.selectedItem.data)
+				{
+					case NONE:
+						setPreset("0", "0", "0", "0", "1", "0", "0", "0", "0", "1", "0", preserveAlphaValue.selected);
+						break;
+					case SHIFT_LEFT:
+						setPreset("0", "0", "0", "0", "0", "1", "0", "0", "0", "1", "0", preserveAlphaValue.selected);
+						break;
+					case SHIFT_UP:
+						setPreset("0", "0", "0", "0", "0", "0", "0", "1", "0", "1", "0", preserveAlphaValue.selected);
+						break;
+					case BLUR:
+						setPreset("0", "1", "0", "1", "1", "1", "0", "1", "0", "5", "0", preserveAlphaValue.selected);
+						break;
+					case ENHANCE:
+						setPreset("0", "-2", "0", "-2", "20", "-2", "0", "-2", "0", "10", "-40", preserveAlphaValue.selected);
+						break;
+					case SHARPEN:
+						setPreset("0", "-1", "0", "-1", "5", "-1", "0", "-1", "0", "1", "0", preserveAlphaValue.selected);
+						break;
+					case CONTRAST:
+						setPreset("0", "0", "0", "0", "2", "0", "0", "0", "0", "1", "-255", preserveAlphaValue.selected);
+						break;
+					case EMBOSS:
+						setPreset("-2", "-1", "0", "-1", "1", "1", "0", "1", "2", "1", "0", preserveAlphaValue.selected);
+						break;
+					case EDGE_DETECT:
+						setPreset("0", "-1", "0", "-1", "4", "-1", "0", "-1", "0", "1", "0", true);
+						break;
+					case HORIZONTAL_EDGE:
+						setPreset("0", "0", "0", "-1", "1", "0", "0", "0", "0", "1", "0", true);
+						break;
+					case VERTICAL_EDGE:
+						setPreset("0", "-1", "0", "0", "1", "0", "0", "0", "0", "1", "0", true);
+						break;
+				}
+				
+				updateFilter();
+			}
+			
+			
+			private function changeFilterValue(event:Event):void
+			{
+				// verify that the values are valid
+				if (matrixTL.text.length <= 0) { return; }
+				if (matrixTC.text.length <= 0) { return; }
+				if (matrixTR.text.length <= 0) { return; }
+				if (matrixML.text.length <= 0) { return; }
+				if (matrixMC.text.length <= 0) { return; }
+				if (matrixMR.text.length <= 0) { return; }
+				if (matrixBL.text.length <= 0) { return; }
+				if (matrixBC.text.length <= 0) { return; }
+				if (matrixBR.text.length <= 0) { return; }
+				if (divisorValue.text.length <= 0) { return; }
+				if (biasValue.text.length <= 0) { return; }
+				
+				// clear the presets drop-down
+				presetChooser.selectedIndex = -1;
+				
+				// update the filter
+				updateFilter();
+			}
+			
+			
+			private function changeNonPresetValue(event:Event):void
+			{
+				// update the filter, but don't clear the preset
+				updateFilter();
+			}
+			
+			
+			// ------- Private methods -------
+			private function updateFilter():void
+			{
+				var alpha:Number = alphaValue.value;
+				var bias:Number = Number(biasValue.text);
+				var clamp:Boolean = clampValue.selected;
+				var color:uint = colorValue.selectedColor;
+				var divisor:Number = Number(divisorValue.text);
+				var matrix:Array = [Number(matrixTL.text), Number(matrixTC.text), Number(matrixTR.text),
+									 Number(matrixML.text), Number(matrixMC.text), Number(matrixMR.text),
+									 Number(matrixBL.text), Number(matrixBC.text), Number(matrixBR.text)];
+				var matrixX:Number = matrixXValue;
+				var matrixY:Number = matrixYValue;
+				var preserveAlpha:Boolean = preserveAlphaValue.selected;
+				
+				_filterFactory.modifyFilter(matrixX, matrixY, matrix, divisor, bias, preserveAlpha, clamp, color, alpha);
+			}
+			
+			
+			private function setPreset(tl:String, tc:String, tr:String,
+										 ml:String, mc:String, mr:String,
+										 bl:String, bc:String, br:String,
+										 divisor:String,
+										 bias:String,
+										 preserveAlpha:Boolean):void
+			{
+				matrixTL.text = tl;
+				matrixTC.text = tc;
+				matrixTR.text = tr;
+				matrixML.text = ml;
+				matrixMC.text = mc;
+				matrixMR.text = mr;
+				matrixBL.text = bl;
+				matrixBC.text = bc;
+				matrixBR.text = br;
+				divisorValue.text = divisor;
+				biasValue.text = bias;
+				preserveAlphaValue.selected = preserveAlpha;
+			}
+		]]>
+	</mx:Script>
+	
+	<mx:HBox>
+		<mx:Canvas height="100%">
+			<mx:Canvas verticalCenter="0">
+				<mx:Label text="Matrix X: 3" x="0" y="0"/>
+				<mx:Label text="Matrix Y: 3" x="0" y="29"/>
+			</mx:Canvas>
+		</mx:Canvas>
+		
+		<mx:Spacer width="20"/>
+		
+		<mx:Canvas>
+			<mx:Label text="Samples:" x="0" y="0" width="60" textAlign="right"/>
+			<mx:ComboBox id="presetChooser" prompt="Choose..." rowCount="5" x="64" y="0" width="170"/>
+			
+			<mx:Label text="Matrix:" x="10" y="41" width="50" textAlign="right"/>
+			<mx:TextInput id="matrixTL" text="0" restrict="0-9\-\." x="64" y="41" width="32"/>
+			<mx:TextInput id="matrixTC" text="0" restrict="0-9\-\." x="103" y="41" width="32"/>
+			<mx:TextInput id="matrixTR" text="0" restrict="0-9\-\." x="142" y="41" width="32"/>
+			<mx:TextInput id="matrixML" text="0" restrict="0-9\-\." x="64" y="70" width="32"/>
+			<mx:TextInput id="matrixMC" text="0" restrict="0-9\-\." x="103" y="70" width="32"/>
+			<mx:TextInput id="matrixMR" text="0" restrict="0-9\-\." x="142" y="70" width="32"/>
+			<mx:TextInput id="matrixBL" text="0" restrict="0-9\-\." x="64" y="99" width="32"/>
+			<mx:TextInput id="matrixBC" text="0" restrict="0-9\-\." x="103" y="99" width="32"/>
+			<mx:TextInput id="matrixBR" text="0" restrict="0-9\-\." x="142" y="99" width="32"/>
+			
+			<mx:Label text="Divisor:" x="10" y="134" width="50" textAlign="right"/>
+			<mx:TextInput id="divisorValue" text="1" restrict="0-9\-\." x="64" y="134" width="34"/>
+			<mx:Label text="Bias:" x="86" y="134" width="50" textAlign="right"/>
+			<mx:TextInput id="biasValue" text="0" restrict="0-9\-\." x="140" y="134" width="34"/>
+		</mx:Canvas>
+		
+		<mx:Canvas height="100%">
+			<mx:Canvas verticalCenter="0">
+				<mx:Label text="Color:" x="0" y="0" width="50" textAlign="right"/>
+				<mx:ColorPicker id="colorValue" selectedColor="#000000" x="54" y="0"/>
+				<mx:Label text="Alpha:" x="70" y="0" width="50" textAlign="right"/>
+				<mx:HSlider id="alphaValue" minimum="0" maximum="1" snapInterval=".05" value="0" x="125" y="0" width="100" dataTipOffset="3" liveDragging="true"/>
+				<mx:CheckBox id="clampValue" label="Clamp" selected="true" x="54" y="33"/>
+				<mx:CheckBox id="preserveAlphaValue" label="Preserve Alpha" selected="true" x="54" y="62"/>
+			</mx:Canvas>
+		</mx:Canvas>
+	</mx:HBox>
+	
+</mx:Canvas>

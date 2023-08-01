@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:Application
+	xmlns:mx="http://www.adobe.com/2006/mxml"
+	xmlns:example="com.example.programmingas3.runtimeassetexplorer.*"	
+	creationComplete="initApp()"
+	layout="vertical">
+
+<mx:Script>    
+	<![CDATA[ 	
+		import flash.display.Sprite;
+		import flash.display.Shape;
+		import flash.display.MovieClip;
+		import flash.display.Loader;
+		import flash.system.LoaderContext;
+		import flash.system.ApplicationDomain;
+		import flash.net.URLRequest;
+		import flash.text.TextField;
+		import flash.text.TextFieldType;
+		import flash.events.*;
+		import flash.utils.*;
+		import flash.geom.ColorTransform;
+			
+		import com.example.programmingas3.runtimeassetexplorer.RuntimeLibrary;
+
+		private var ASSETS_PATH:String = "GeometricAssets.swf";
+		
+		public function initApp():void {
+			importRuntimeAssets();
+		}
+		private function importRuntimeAssets():void {
+			var path:URLRequest = new URLRequest(ASSETS_PATH);
+			var context:LoaderContext = new LoaderContext(false, ApplicationDomain.currentDomain);
+			var loader:Loader = new Loader();
+			loader.contentLoaderInfo.addEventListener(Event.COMPLETE,runtimeAssetsLoadComplete);
+			loader.load(path,context);			
+		}
+		private function runtimeAssetsLoadComplete(event:Event):void {			
+			var rl:* = event.target.content;
+			var assetList:Array = rl.getAssets();
+			populateDropdown(assetList);
+			stage.frameRate = 60;
+		}
+		private function populateDropdown(assetList:Array):void {
+			var shortNameList:Array = new Array();
+			for(var i:uint = 0; i < assetList.length; i++) {
+				var className:String = assetList[i];
+				var splicePoint:Number = className.lastIndexOf(".")+1;
+				var shortName:String = splicePoint ? className.substr(splicePoint) : className;
+				shortNameList.push( { label:shortName, data:className } );
+			}	
+			assetNameCbo.dataProvider = shortNameList;			
+		}
+		private function rotate(event:MouseEvent):void {
+			var target:MovieClip = MovieClip(event.currentTarget);
+			target.play();
+		}
+		private function addAsset():void {
+			var className:String = assetNameCbo.selectedItem.data;
+			var AssetClass:Class = getDefinitionByName(className) as Class;
+			var mc:MovieClip = new AssetClass();
+			mc.transform.colorTransform = getRandomColor();
+			mc.width = sizeNs.value;
+			mc.height = sizeNs.value;
+			mc.rotation = Math.random() * 360;
+			mc.addEventListener(MouseEvent.MOUSE_DOWN,startDragAsset);
+			mc.addEventListener(MouseEvent.MOUSE_UP,stopDragAsset);
+			mc.addEventListener(MouseEvent.CLICK,rotate);
+			mc.stop();
+			mc.x = 50;
+			mc.y = 50;
+
+			canvas.addChild(mc);
+		}
+		private function startDragAsset(event:MouseEvent):void {
+			var target:MovieClip = MovieClip(event.currentTarget);
+			target.startDrag();
+		}
+		private function stopDragAsset(event:MouseEvent):void {
+			var target:MovieClip = MovieClip(event.currentTarget);
+			target.stopDrag();
+		}
+		private function getRandomColor():ColorTransform {
+			return new ColorTransform(Math.random(),Math.random(),Math.random(),1,(Math.random() * 128),(Math.random() * 128),(Math.random() * 128),0);
+		}
+		private function browseForAssets():void {
+			var fr:FileReference = new FileReference();
+			fr.addEventListener(Event.SELECT,importRuntimeAssets);
+			fr.browse();
+			
+		}
+	]]>
+	</mx:Script>
+	
+ 	<mx:Label id="title" text="Runtime Assets Explorer" fontSize="24" fontStyle="bold" />
+	<mx:Text id="subtitle" text="From Programming ActionScript 3.0, Chapter 16: Working with movie clips" width="100%" textAlign="center" fontSize="12" />
+    
+    <mx:Panel title="Drawing Canvas" verticalGap="0">
+
+        <mx:ControlBar>
+        
+             <mx:Label text="Asset to add:" /> 
+             <mx:ComboBox id="assetNameCbo">
+             </mx:ComboBox> 
+           
+           <mx:Label text="Size in pixels:" />
+           <mx:NumericStepper id="sizeNs" minimum="10" maximum="100" stepSize="10" value="50"/>
+           
+           <mx:Button id="addBtn" label="Add" click="addAsset()"/> 
+           
+        </mx:ControlBar>
+        <mx:VBox width="100%" height="100%" paddingLeft="10" paddingRight="10" paddingTop="10" paddingBottom="10" backgroundColor="0xEEEEFF">
+            
+            <mx:UIComponent id="canvas" width="500" height="200" />
+                
+        </mx:VBox>   
+    </mx:Panel>
+
+</mx:Application>

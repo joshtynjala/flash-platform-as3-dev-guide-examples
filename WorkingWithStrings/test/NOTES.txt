@@ -1,0 +1,17 @@
+In order to get the test harness working, you will need to:
+- Create a new Zorn Project
+- Point the project path at the "test" folder
+- Set the "bin" folder to be a sibling of "test" and "src" (the default puts it into "test")
+- Add the "src" folder to the class path
+- Add AsUnit 3.0 framework to the class path (www.asunit.org)
+- Add the "ObjectOrientedProgramming/src" folder to the class path
+- Set "StringSampleRunner.as" as DocumentRoot
+- If you plan on using the debugger, add a permissions file to your player directory that permits all files in bin to avoid Security problems.
+On my machine, this file is located at:
+
+C:\Documents and Settings\lbayes\Application Data\Macromedia\Flash Player\#Security\FlashPlayerTrust
+
+It can be given any name, it is a text file, and it's contents are (on my machine):
+
+C:\Documents and Settings\[USER-DIR]\My Documents\projects\mm-samples\WorkingWithStrings\bin
+

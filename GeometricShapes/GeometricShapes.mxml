@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:Application xmlns:mx="http://www.adobe.com/2006/mxml" xmlns="*" layout="vertical">
+
+    <mx:Script>
+        <![CDATA[
+            import com.example.programmingas3.geometricshapes.IGeometricShape;
+            import com.example.programmingas3.geometricshapes.GeometricShapeFactory;
+            import com.example.programmingas3.geometricshapes.RegularPolygon;
+            
+            public var currentShape:IGeometricShape;
+            
+            public function describeShape():void
+            {
+                var shapeName:String = shapeNameCbo.selectedLabel;
+                
+                this.currentShape = GeometricShapeFactory.createShape(shapeName, shapeWidthNs.value);
+                
+                this.outputTxt.text = this.currentShape.describe();
+            } 
+        ]]>
+    </mx:Script>
+    
+ 	<mx:Label id="title" text="Geometric Shapes Example" fontSize="24" fontStyle="bold" />
+	<mx:Text id="subtitle" text="From Programming ActionScript 3.0, Chapter 4: Object-oriented programming in ActionScript" width="100%" textAlign="center" fontSize="12" />
+    
+    <mx:Form width="500">
+       <mx:FormItem label="What kind of shape would you like to describe?">
+          <mx:ComboBox id="shapeNameCbo" change="describeShape()">
+             <mx:dataProvider>
+                <mx:Array>
+                   <mx:String>Circle</mx:String> 
+                   <mx:String>Triangle</mx:String> 
+                   <mx:String>Square</mx:String> 
+                </mx:Array> 
+             </mx:dataProvider> 
+          </mx:ComboBox>
+       </mx:FormItem>
+       
+       <mx:FormItem label="How wide should the shape be in pixels?">
+          <mx:NumericStepper id="shapeWidthNs" minimum="10" maximum="400" stepSize="10" change="describeShape()" />
+       </mx:FormItem>
+    </mx:Form>
+       
+    <mx:Label text="Results:" width="500" />
+    <mx:TextArea id="outputTxt" width="500" height="150" editable="false" />
+
+</mx:Application>

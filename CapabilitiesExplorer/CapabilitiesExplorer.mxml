@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:Application xmlns:mx="http://www.adobe.com/2006/mxml" 
+	xmlns:example="com.example.programmingas3.capabilities.*"
+	xmlns="*" 
+	layout="vertical"
+	horizontalAlign="left"
+	creationComplete="initApp();">
+	
+	<mx:Script>
+		<![CDATA[
+			import com.example.programmingas3.capabilities.*;
+			private function initApp():void {
+				var dp:Array = CapabilitiesGrabber.getCapabilities();
+				capabilitiesGrid.dataProvider = dp;
+			}
+		]]>
+	</mx:Script>
+	
+	<mx:Label id="title" text="CapabilitiesExplorer Example" fontSize="24" fontStyle="bold" />
+	<mx:Label id="subtitle" text="From Programming ActionsScript 3.0, Chapter 23: Client system environment" fontSize="12" />
+
+	<mx:Panel title="System capabilities" width="100%" height="100%">
+		<mx:DataGrid id="capabilitiesGrid" editable="false" width="100%" height="100%" dropShadowEnabled="false">
+			<mx:columns>
+				<mx:Array>
+					<mx:DataGridColumn dataField="name" headerText="Name" />
+					<mx:DataGridColumn dataField="value" headerText="Value" />
+				</mx:Array>
+			</mx:columns>
+		</mx:DataGrid>
+	</mx:Panel>
+	 
+</mx:Application>

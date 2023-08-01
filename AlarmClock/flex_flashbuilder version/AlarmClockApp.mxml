@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:Application xmlns:mx="http://www.adobe.com/2006/mxml" 
+	xmlns:example="com.example.programmingas3.clock.*"
+	xmlns="*" 
+	layout="vertical"
+	horizontalAlign="left"
+	paddingTop="0"
+	creationComplete="initApp()">
+
+	<mx:Script>
+		<![CDATA[
+			import com.example.programmingas3.clock.AlarmEvent;
+			
+			public function initApp():void
+			{
+				clock.addEventListener(AlarmEvent.ALARM, onAlarm);
+				
+	            // Adds 60 seconds to the current time and preloads the alarm fields
+	            var alarmTime:Date = new Date();
+	            alarmTime.setTime(alarmTime.time + 60000);
+	            hourNs.value = alarmTime.hours;
+	            minuteNs.value = alarmTime.minutes;
+	        }		
+
+			public function setAlarm():void
+			{
+				var alarmTime:Date = clock.setAlarm(hourNs.value, minuteNs.value, messageTxt.text);
+				
+				alarmTimeTxt.text = "Alarm Time:" + alarmTime.hours + ":" + padZeroes(alarmTime.minutes.toString());
+			}
+			
+			public function onAlarm(evt:AlarmEvent):void
+			{
+				alarmTimeTxt.text = evt.message;
+			}
+			
+	        public function padZeroes(numStr:String, desiredLength:uint = 2):String
+	        {
+	        	if (numStr.length < desiredLength)
+	        	{
+	        		for (var i:uint = 0; i < (desiredLength - numStr.length); i++)
+	        		{
+	        			numStr = "0" + numStr;
+	        		}
+	        	}
+	        	return numStr;
+	        }
+		]]>
+	</mx:Script>
+	
+	<mx:Label id="title" text="AlarmClock Example" fontSize="24" fontStyle="bold" />
+	<mx:Label id="subtitle" text="From Programming ActionScript 3.0, Chapter 11: Handling events" fontSize="12" />
+	
+	<mx:VBox borderStyle="solid" paddingTop="4" borderColor="#EEEEEE">
+
+		<mx:HBox horizontalGap="2" width="200" paddingLeft="0" horizontalAlign="center" >
+				<mx:NumericStepper id="hourNs" stepSize="1" minimum="0" maximum="23" textAlign="right" width="50" />
+				<mx:NumericStepper id="minuteNs" stepSize="1" minimum="0" maximum="59" textAlign="right" width="50" />
+				<mx:Button id="setAlarmBtn" label="Set Alarm" click="setAlarm()" />
+			</mx:HBox>
+			
+			<mx:HBox horizontalGap="2" width="200" paddingLeft="0" horizontalAlign="center" verticalAlign="middle">
+				<mx:Label text="Message:" textAlign="right" />
+				<mx:TextInput id="messageTxt" width="120" text="Wake up!"/>
+			</mx:HBox>
+			
+			<mx:Label id="alarmTimeTxt" width="200" text="Alarm Time: not set" textAlign="center" />	
+			
+	</mx:VBox>	
+	
+	<example:AlarmClock id="clock" creationComplete="clock.initClock()"/>
+
+</mx:Application>

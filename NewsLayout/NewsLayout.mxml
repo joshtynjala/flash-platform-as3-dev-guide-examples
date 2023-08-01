@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:Application 
+	xmlns:mx="http://www.adobe.com/2006/mxml" 
+	xmlns:example="com.example.programmingas3.newslayout.*"
+	layout="vertical"
+	horizontalAlign="center">
+
+	<example:StoryLayoutComponent id="story" 
+	    width="720" 
+	    preferredWidth="720" 
+	    padding="10" 
+	    numColumns="3" 
+	    x="10" 
+	    y="80" 
+	    creationComplete="story.initStory()" />
+    
+</mx:Application>
+

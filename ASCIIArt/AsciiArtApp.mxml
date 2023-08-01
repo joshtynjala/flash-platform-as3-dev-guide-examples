@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:Application
+	xmlns:mx="http://www.adobe.com/2006/mxml"
+	xmlns="*"
+	layout="vertical"
+	paddingTop="0"
+	paddingLeft="8"
+	paddingRight="8"
+	paddingBottom="0"
+	creationComplete="initApp()">
+
+	<mx:Script>
+		<![CDATA[
+			import com.example.programmingas3.asciiArt.ImageInfo;
+			import com.example.programmingas3.asciiArt.AsciiArtBuilder;
+			
+			private var asciiArt:AsciiArtBuilder;
+			
+			private function initApp():void
+			{
+				asciiArt = new AsciiArtBuilder();
+				asciiArt.addEventListener("ready", imageReady);
+			}
+			
+			/**
+			 * Called when the AsciiArtBuilder has loaded the image data and is ready to
+			 * display an image.
+			 */
+			private function imageReady(event:Event):void
+			{
+				updatePreview();
+			}
+			
+			
+			/**
+			 * Called when the "next image" button is pressed.
+			 */
+			private function nextImage():void
+			{
+				// Advance to the next image
+				asciiArt.next();
+				// update the image preview
+				updatePreview();
+			}
+			
+			
+			/**
+			 * Updates the image preview display, including title and image, using
+			 * the current image in the asciiArt object.
+			 */
+			private function updatePreview():void
+			{
+				var imageInfo:ImageInfo = asciiArt.currentImage.info;
+				bmp.load(AsciiArtBuilder.IMAGE_PATH + imageInfo.fileName);
+				sourceImage.title = imageInfo.title;
+				asciiArtText.text = asciiArt.asciiArtText;
+			}
+		]]>
+	</mx:Script>
+
+	<mx:Label id="title" text="ASCII Art Example" fontSize="24" fontStyle="bold" />
+	<mx:Label id="subtitle" text="From Programming ActionScript 3.0, Chapter 6: Working with strings" fontSize="12" />
+	
+	<mx:HBox width="100%" height="100%" horizontalAlign="center">
+		
+		<mx:Panel id="sourceImage" backgroundColor="#b7babc" borderAlpha="1" borderColor="#666" borderStyle="solid" borderThickness="1">
+			<mx:Image width="400" id="bmp" height="300"/>
+			<mx:ControlBar>
+				<mx:Spacer width="290" height="15"/>
+				<mx:Button label="Next Image" click="nextImage()"/>
+			</mx:ControlBar>
+		</mx:Panel>
+		
+		<mx:TextArea id="asciiArtText" width="510" height="450" fontFamily="_typewriter" fontSize="8"></mx:TextArea>	
+
+	</mx:HBox>
+
+</mx:Application>

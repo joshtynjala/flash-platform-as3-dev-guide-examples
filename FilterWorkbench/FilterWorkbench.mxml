@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<app:FilterWorkbench xmlns:mx="http://www.adobe.com/2006/mxml"
+	xmlns:app="flexapp.*"
+	layout="vertical"
+	backgroundGradientColors="[#ccccccc, #eeeeee]"
+	width="720"
+	height="500"
+	paddingTop="0"
+	paddingLeft="20"
+	paddingRight="20"
+	paddingBottom="0">
+	
+	<mx:Script>
+		<![CDATA[
+			
+		]]>
+	</mx:Script>
+
+	<mx:Style>
+		Button
+		{
+			font-weight: normal;
+		}
+		ImageContainer
+		{
+			background-color: #ffffff;
+			border: 1px solid #000000;
+		}
+		
+		.code
+		{
+			font-family: "Andale Mono", Monaco, "Courier New", Courier, "_typewriter";
+		}
+		.panelLabel
+		{
+			font-family: Arial;
+			font-size: 14px;
+			font-weight: bold;
+		}
+	</mx:Style>
+	
+	<mx:Label id="title" text="Filter Workbench Example" fontSize="24" fontStyle="bold" enabled="true"/>
+	<mx:Label id="subtitle" text="From Programming ActionScript 3.0, Chapter 15: Filtering display objects" fontSize="12"/>
+	
+	<mx:HBox width="100%">
+		<mx:Label text="Source image:"/>
+		<mx:ComboBox id="filterTargetPicker" width="150"/>
+		<mx:Spacer width="100%"/>
+		<mx:Label text="Filter:"/>
+		<mx:ComboBox id="filterPicker" width="130"/>
+		<mx:Button id="applyFilterBtn" label="Apply filter and add another" width="200"/>
+	</mx:HBox>
+	<mx:HBox width="100%">
+		<app:ImageContainer id="imageContainer" width="330" height="230"/>
+		<mx:Spacer width="100%"/>
+		<mx:TextArea id="codeDisplay" styleName="code" editable="false" width="330" height="230"/>
+	</mx:HBox>
+	<mx:HRule width="100%"/>
+	<mx:Canvas width="100%">
+		<mx:Text styleName="panelLabel" text="Filter Properties" x="5" y="0"/>
+		<mx:Canvas id="filterFormContainer" x="0" y="0" width="670" height="160"/>
+	</mx:Canvas>
+</app:FilterWorkbench>

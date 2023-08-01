@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:Canvas xmlns:mx="http://www.adobe.com/2006/mxml"
+	xmlns:appc="flexapp.controls.*"
+	implements="com.example.programmingas3.filterWorkbench.IFilterPanel" 
+	right="0" 
+	top="0" 
+	width="100%" 
+	height="100%"
+	creationComplete="setupChildren();">
+	
+	<mx:Script>
+		<![CDATA[
+			import com.example.programmingas3.filterWorkbench.GlowFactory;
+			import com.example.programmingas3.filterWorkbench.IFilterFactory;
+			
+			import flash.events.Event;
+			import flash.events.MouseEvent;
+			
+			import mx.events.ColorPickerEvent;
+			import mx.events.ListEvent;
+			import mx.events.SliderEvent;
+			
+			// ------- Private vars -------
+			private var _filterFactory:GlowFactory;
+			
+			
+			// ------- Public properties -------
+			public function get filterFactory():IFilterFactory
+			{
+				if (_filterFactory == null)
+				{
+					_filterFactory = new GlowFactory();
+				}
+				return _filterFactory;
+			}
+			
+			
+			// ------- Public methods -------
+			public function resetForm():void
+			{
+				blurXValue.value = 6;
+				blurYValue.value = 6;
+				strengthValue.value = 2;
+				qualityValue.selectedIndex = 0;
+				colorValue.selectedColor = 0xFF0000;
+				alphaValue.value = 1;
+				knockoutValue.selected = false;
+				innerValue.selected = false;
+				
+				if (_filterFactory != null)
+				{
+					_filterFactory.modifyFilter();
+				}
+			}
+			
+			
+			// ------- Event handling -------
+			private function setupChildren():void
+			{
+				// add event listeners for child controls
+				blurXValue.addEventListener(Event.CHANGE, changeFilterValue);
+				blurYValue.addEventListener(Event.CHANGE, changeFilterValue);
+				strengthValue.addEventListener(Event.CHANGE, changeFilterValue);
+				qualityValue.addEventListener(Event.CHANGE, changeFilterValue);
+				colorValue.addEventListener(ColorPickerEvent.CHANGE, changeFilterValue);
+				alphaValue.addEventListener(Event.CHANGE, changeFilterValue);
+				knockoutValue.addEventListener(MouseEvent.CLICK, changeFilterValue);
+				innerValue.addEventListener(MouseEvent.CLICK, changeFilterValue);
+			}
+			
+			
+			private function changeFilterValue(event:Event):void
+			{
+				// update the filter
+				updateFilter();
+			}
+			
+			
+			// ------- Private methods -------
+			private function updateFilter():void
+			{
+				var blurX:Number = blurXValue.value;
+				var blurY:Number = blurYValue.value;
+				var strength:Number = strengthValue.value;
+				var quality:int = qualityValue.selectedItem.data;
+				var color:uint = colorValue.selectedColor;
+				var alpha:Number = alphaValue.value;
+				var knockout:Boolean = knockoutValue.selected;
+				var inner:Boolean = innerValue.selected;
+				
+				_filterFactory.modifyFilter(color, alpha, blurX, blurY, strength, quality, inner, knockout);
+			}
+		]]>
+	</mx:Script>
+	<mx:HBox horizontalCenter="0" verticalCenter="0">
+		<mx:Form>
+			<mx:FormItem label="Blur X:">
+				<mx:HSlider id="blurXValue" snapInterval="0" minimum="0" maximum="255" value="6" width="80" dataTipOffset="3" liveDragging="true"/>
+			</mx:FormItem>
+			<mx:FormItem label="Blur Y:">
+				<mx:HSlider id="blurYValue" snapInterval="0" minimum="0" maximum="255" value="6" width="80" dataTipOffset="3" liveDragging="true"/>
+			</mx:FormItem>
+			<mx:FormItem label="Strength:">
+				<mx:HSlider id="strengthValue" snapInterval="0" minimum="0" maximum="255" value="2" width="80" dataTipOffset="3" liveDragging="true"/>
+			</mx:FormItem>
+			<mx:FormItem label="Quality:">
+				<appc:QualityComboBox id="qualityValue"/>
+			</mx:FormItem>
+		</mx:Form>
+		
+		<mx:Form>
+			<mx:FormItem label="Color:">
+				<mx:ColorPicker id="colorValue" selectedColor="#FF0000"/>
+			</mx:FormItem>
+			<mx:FormItem label="Alpha:">
+				<mx:HSlider id="alphaValue" snapInterval=".05" minimum="0" maximum="1" value="1" width="80" dataTipOffset="3" liveDragging="true"/>
+			</mx:FormItem>
+		</mx:Form>
+		
+		<mx:Form>
+			<mx:FormItem label="Knockout:"><mx:CheckBox id="knockoutValue"/></mx:FormItem>
+			<mx:FormItem label="Inner Glow:"><mx:CheckBox id="innerValue"/></mx:FormItem>
+		</mx:Form>
+	</mx:HBox>
+</mx:Canvas>

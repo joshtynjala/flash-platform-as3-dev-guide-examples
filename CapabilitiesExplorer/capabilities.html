@@ -1,0 +1,72 @@
+<!-- saved from url=(0014)about:internet -->
+<html lang="en">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title></title>
+</head>
+<body scroll="no">
+  	<object classid="clsid:D27CDB6E-AE6D-11cf-96B8-444553540000"
+			id="CapabilitiesExplorer" width="100%" height="100%"
+			codebase="http://download.macromedia.com/pub/shockwave/cabs/flash/swflash.cab">
+			<param name="movie" value="CapabilitiesExplorer.swf" />
+			<param name="quality" value="high" />
+			<param name="bgcolor" value="#869ca7" />
+			<param name="allowScriptAccess" value="sameDomain" />
+			<embed src="CapabilitiesExplorer.swf" quality="high" bgcolor="#869ca7"
+				width="100%" height="100%" name="CapabilitiesExplorer" align="middle"
+				play="true"
+				loop="false"
+				quality="high"
+				allowScriptAccess="sameDomain"
+				type="application/x-shockwave-flash"
+				pluginspage="http://www.macromedia.com/go/getflashplayer">
+			</embed>
+	</object>
+
+<script language="JavaScript">
+	function JS_getBrowserObjects() {
+		// Create an array to hold each of the browser's items.
+		var tempArr = new Array();
+
+		// Loop over each item in the browser's navigator object.
+		for (var name in navigator) {
+			var value = navigator[name];
+			/*
+			If the current value is a string or Boolean object, add it to the
+			array, otherwise ignore the item.
+			*/
+			switch (typeof(value)) {
+				case "string":
+				case "boolean":
+					/*
+					Create a temporary string which will be added to the array.
+					Make sure that we URL-encode the values using JavaScript's
+					escape() function.
+					*/
+					var tempStr = "navigator." + name + "=" + escape(value);
+					// Push the URL-encoded name/value pair onto the array.
+					tempArr.push(tempStr);
+					break;
+			}
+		}
+		// Loop over each item in the browser's screen object.
+		for (var name in screen) {
+			var value = screen[name];
+			/*
+			If the current value is a number, add it to the array, otherwise
+			ignore the item.
+			*/
+			switch (typeof(value)) {
+				case "number":
+					var tempStr = "screen." + name + "=" + escape(value);
+					tempArr.push(tempStr);
+					break;
+			}
+		}
+		// Return the array as a URL-encoded string of name-value pairs.
+		return tempArr.join("&");
+	}
+</script>
+
+</body>
+</html>

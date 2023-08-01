@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:Application xmlns:mx="http://www.adobe.com/2006/mxml" xmlns="*" layout="absolute" creationComplete="initApp()">
+	<mx:Script>
+		<![CDATA[
+			import com.example.programmingas3.wordProcessor.TextFinder;
+			
+			private var _finder:TextFinder;
+			
+			private function initApp():void
+			{
+				_finder = new TextFinder();
+			}
+			
+			/**
+			 * Searches the main text field for the next occurance of the text in the "find" field,
+			 * and selects the found text (if any is found).
+			 */
+			private function findAndSelectText():void
+			{
+				var textToFind:String = findText.text;
+				if (textToFind.length == 0)
+				{
+					return;
+				}
+				
+				// The TextArea component must have focus before retrieving
+				// the "textField.caretIndex" property.
+				// This also returns focus to the main text field, making any selected
+				// text show up as highlighted again.
+				mainText.setFocus();
+				
+				// start the search after the last character in the current selection
+				// or after the caret position, if nothing is selected
+				var startIndex:uint = 0;
+				if (mainText.textField.caretIndex > 0)
+				{
+					startIndex = Math.max(mainText.selectionEndIndex, mainText.textField.caretIndex);
+				}
+				
+				// get the starting position of the found text
+				var resultStart:Number = _finder.find(mainText.text, textToFind, startIndex, matchCase.selected);
+				if (resultStart >= 0)
+				{
+					var resultEnd:Number = resultStart + textToFind.length;
+					
+					// select the found text
+					mainText.setSelection(resultStart, resultEnd);
+				}
+			}
+			
+			
+			/**
+			 * Replaces the selected text in the main text field with the text in the "replace"
+			 * field, then searches for the text in the "find" field.
+			 */
+			private function replaceAndFindText():void
+			{
+				// if nothing is selected or no replacement text is specified, just return
+				if (replaceText.length == 0 || mainText.selectionBeginIndex < 0)
+				{
+					return;
+				}
+				
+				// record the start index of the selection, to know where to re-select after
+				// the replacement operation
+				var startIndex:Number = mainText.selectionBeginIndex;
+				
+				// make the replacement
+				mainText.text = _finder.replace(mainText.text, replaceText.text, mainText.selectionBeginIndex, mainText.selectionEndIndex);
+				// re-select the (newly replaced) text
+				var endIndex:Number = startIndex + replaceText.text.length;
+				mainText.setSelection(startIndex, endIndex);
+				// find again
+				findAndSelectText();
+			}
+			
+			
+			// ------- Event Handling -------
+			/**
+			 * Toggles the visibility of the "find/replace" panel to match the state of the toggle button
+			 * which causes the panel to be displayed.
+			 */
+			private function toggleFindPanel():void
+			{
+				findDialog.visible = showFind.selected;
+				// return focus to the main text field, so its
+				// selected text shows up as highlighted
+				mainText.setFocus();
+			}
+		]]>
+	</mx:Script>
+	<mx:Panel left="10" top="10" right="10" bottom="10" title="Word Processor" layout="absolute">
+		<mx:TextArea id="mainText" left="0" right="0" bottom="0" top="0"/>
+		<mx:Panel id="findDialog"
+				x="107" y="169"
+				layout="vertical" 
+				backgroundAlpha=".85"
+				backgroundColor="#cccccc"
+				borderAlpha=".35"
+				borderColor="#666666"
+				borderStyle="solid"
+				borderThickness="1" title="Find and Replace"
+				visible="false">
+			<mx:HRule width="100%"/>
+			<mx:HBox>
+				<mx:Form paddingBottom="0" paddingLeft="0" paddingRight="0" paddingTop="0">
+					<mx:FormItem label="Find:">
+						<mx:TextInput id="findText"/>
+					</mx:FormItem>
+					<mx:FormItem label="Replace:">
+						<mx:TextInput id="replaceText"/>
+					</mx:FormItem>
+					<mx:FormItem>
+						<mx:CheckBox id="matchCase" label="Match case" click="mainText.setFocus()" selected="false"/>
+					</mx:FormItem>
+				</mx:Form>
+				<mx:Form paddingBottom="0" paddingLeft="0" paddingRight="0" paddingTop="0">
+					<mx:Button label="Find Next" click="findAndSelectText();" enabled="{ findText.text.length > 0 }" width="100%"/>
+					<mx:Button label="Replace" click="replaceAndFindText()" enabled="{ findText.text.length > 0 }" width="100%"/>
+				</mx:Form>
+			</mx:HBox>
+		</mx:Panel>
+		<mx:ControlBar>
+			<mx:Spacer width="100%" height="15"/>
+			<mx:Button id="showFind" toggle="true" click="toggleFindPanel()" label="Find and Replace"/>
+		</mx:ControlBar>
+	</mx:Panel>
+</mx:Application>

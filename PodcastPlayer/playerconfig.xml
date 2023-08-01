@@ -1,0 +1,34 @@
+<?xml version='1.0' standalone='yes' ?>
+<config>
+        
+    <feed>
+        <label>Adobe &#174; Creative Suite Developer Podcast</label>
+        <url>http://rss.adobe.com/www/special/mnr_index.rss</url>
+    </feed>
+    
+    <feed>
+	    <label>boagworld.com Web Design Podcast</label>
+    	<url>http://feeds.feedburner.com/boagworldpodcast/</url>
+    </feed>
+
+    <feed>
+	    <label>Buzz Out Loud</label>
+    	<url>http://www.cnet.com/i/pod/cnet_buzz.xml</url>
+    </feed>
+    
+    <feed>
+	    <label>Lodebearing</label>
+    	<url>http://www.lodestone.com/blogfusion/feeds/rss.cfm</url>
+    </feed>
+        
+    <feed>
+	    <label>News.com Tech News Podcast</label>
+    	<url>http://news.com.com/html/ne/podcasts/daily_podcast.xml</url>
+    </feed>
+
+	<feed>
+	    <label>Slate Daily Podcast</label>
+    	<url>http://www.slate.com/podcast/</url>
+    </feed>
+
+</config>

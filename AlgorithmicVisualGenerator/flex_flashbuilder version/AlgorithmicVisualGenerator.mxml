@@ -1,0 +1,191 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:Application
+	xmlns:mx="http://www.adobe.com/2006/mxml"
+	xmlns:example="com.example.programmingas3.algorithmic.*"
+	layout="absolute"
+	creationComplete="initApp()">
+	
+	<mx:Script>
+		<![CDATA[
+			import flash.display.Sprite;
+			import flash.display.Shape;
+			import flash.events.Event;
+			import flash.geom.ColorTransform;
+			import flash.display.StageScaleMode;
+			import flash.display.StageAlign;
+			import com.example.programmingas3.algorithmic.Satellite;
+			
+			private var satellites:Array;
+			private var container:Sprite;
+			private var bg:Shape;
+			private var radius:Number = 50;
+			private var satelliteRadius:Number = 6;
+			private var totalSatellites:Number = 600;		
+			private var visibleSatellites:Number = 100;
+			private var redBias:Number = 0xFF;
+			private var greenBias:Number = 0xFF;
+			private var blueBias:Number = 0xFF;
+			private var useAlphaEffect:Boolean = false;
+			private var stageWidth:Number = 600;
+			private var stageHeight:Number = 400;
+				
+			public function initApp():void {
+				radiusSlider.addEventListener(Event.CHANGE,changeSetting);
+				satelliteRadiusSlider.addEventListener(Event.CHANGE,changeSetting);
+				visibleSatellitesSlider.addEventListener(Event.CHANGE,changeSetting);
+				redSlider.addEventListener(Event.CHANGE,changeSetting);
+				greenSlider.addEventListener(Event.CHANGE,changeSetting);
+				blueSlider.addEventListener(Event.CHANGE,changeSetting);
+	
+				radiusSlider.minimum = 2;
+				radiusSlider.maximum = 200;
+				radiusSlider.value = radius;
+				satelliteRadiusSlider.minimum = 2;
+				satelliteRadiusSlider.maximum = 40
+				satelliteRadiusSlider.value = satelliteRadius;
+				visibleSatellitesSlider.minimum = 0;
+				visibleSatellitesSlider.maximum = totalSatellites;
+				visibleSatellitesSlider.value = visibleSatellites;
+				redSlider.minimum = 
+				greenSlider.minimum = 
+				blueSlider.minimum = 0;
+				redSlider.maximum = 
+				greenSlider.maximum = 
+				blueSlider.maximum = 0xFF;
+				redSlider.value = redBias;
+				greenSlider.value = greenBias;
+				blueSlider.value = blueBias;
+				
+				fullScreenBtn.addEventListener(MouseEvent.CLICK, toggleFullScreen);
+				alphaShadingBtn.addEventListener(MouseEvent.CLICK, toggleAlphaShading);
+								
+				addEventListener(Event.ADDED_TO_STAGE, setStageListener);
+				addEventListener(Event.ENTER_FRAME, doEveryFrame);			
+				
+				build();
+			}
+			private function setStageListener(e:Event):void {
+				stage.scaleMode = StageScaleMode.NO_SCALE;
+				stage.align = StageAlign.TOP_LEFT;
+				stage.addEventListener(Event.RESIZE,build);
+			}
+			
+			private function clear():void {
+				satellites = new Array()
+	
+				if(container) {
+					drawingArea.removeChild(container);
+				}
+			}
+			private function build(e:Event = null):void {
+				clear();
+				
+				var drawingAreaMask:Sprite = new Sprite();
+				drawingAreaMask.graphics.beginFill(0);
+				drawingAreaMask.graphics.drawRect(0,120,stageWidth,stageHeight);
+				drawingAreaMask.graphics.endFill();
+	
+				container = new Sprite();
+				container.y = 120;
+				container.mask = drawingAreaMask;
+				drawingArea.addChild(container);
+				
+				
+				bg = new Shape();
+				bg.graphics.beginFill(0xEEEEEE);
+				bg.graphics.drawRect(0,0,stageWidth,stageHeight);
+				container.addChild(bg);
+	
+				var i:uint;
+				for(i=0; i<totalSatellites; i++) {
+					var satelliteContainer:Sprite = new Sprite();
+					satelliteContainer.x = Math.random()*stageWidth;
+					satelliteContainer.y = Math.random()*stageHeight;
+					container.addChild(satelliteContainer);
+					var position:Number = Math.random() * 360;
+					var color:uint = getRandomColor();
+					var satellite:Satellite = new Satellite(position,color);
+					satelliteContainer.addChild(satellite);
+					satellites.push(satellite);
+				}
+			}
+			private function doEveryFrame(e:Event):void {
+				var i:uint;
+				for(i=0; i<visibleSatellites; i++) {
+					var satellite:Satellite = satellites[i];
+					if(satellite) {
+						satellite.position += 4;
+						satellite.radius = satelliteRadius;
+						satellite.orbitRadius = radius;
+						satellite.draw(useAlphaEffect);
+						satellite.visible = true;
+					}
+				}
+				while(i < totalSatellites) {
+					var satelliteToHide:Satellite = satellites[i];
+					satelliteToHide.visible = false;
+					i++
+				}
+			}
+			private function getRandomColor():uint {
+				var ct:ColorTransform = new ColorTransform(1,1,1,1,Math.random()*redBias,Math.random()*greenBias,Math.random()*blueBias);
+				return ct.color;
+			}
+			
+			private function changeSetting(e:Event):void {
+				switch(e.target) {
+					case radiusSlider:
+						radius = e.target.value;
+						break;
+					case satelliteRadiusSlider:
+						satelliteRadius = e.target.value;
+						break;
+					case visibleSatellitesSlider:
+						visibleSatellites = e.target.value;
+						break;
+					case redSlider:
+						redBias = e.target.value;
+						build()
+						break;
+					case greenSlider:
+						greenBias = e.target.value;
+						build();
+						break;
+					case blueSlider:
+						blueBias = e.target.value;
+						build()
+						break;
+					default:
+						break;
+				}
+			}
+			private function toggleFullScreen(e:MouseEvent):void {
+				stage.displayState = stage.displayState == StageDisplayState.FULL_SCREEN ? StageDisplayState.NORMAL : StageDisplayState.FULL_SCREEN;
+			}
+			private function toggleAlphaShading(e:MouseEvent):void {
+				useAlphaEffect = useAlphaEffect == true ? false : true;
+			}			
+		]]>
+	</mx:Script>
+
+	<mx:UIComponent id="drawingArea" />
+
+		<mx:HSlider x="110" y="60" id="radiusSlider" width="120"/>
+		<mx:HSlider x="110" y="80" id="satelliteRadiusSlider" width="120"/>
+		<mx:HSlider x="110" y="100" id="visibleSatellitesSlider" width="120"/>
+		<mx:HSlider x="240" y="60" id="redSlider" width="120"/>
+		<mx:HSlider x="240" y="80" id="greenSlider" width="120"/>
+		<mx:HSlider x="240" y="100" id="blueSlider" width="120"/>
+		<mx:Text x="10" y="60" text="Orbit Radius"/>
+		<mx:Text x="10" y="78" text="Satellite Radius"/>
+		<mx:Text x="10" y="98" text="Visible Satellites"/>
+		<mx:Text x="360" y="60" text="Red Bias" textAlign="right" width="76"/>
+		<mx:Text x="360" y="78" text="Green Bias" textAlign="right" width="76"/>
+		<mx:Text x="360" y="98" text="Blue Bias" textAlign="right" width="76"/>
+		<mx:Text x="64" y="4" text="Algorithmic Visual Generator Example" fontFamily="Verdana" fontSize="18" textAlign="center"/>
+		<mx:Text x="22" y="31" text="From Programming ActionScript 3.0, Chapter 13: Using the drawing API"/>
+		<mx:Button x="455" y="64" label="Alpha Shading" id="alphaShadingBtn"/>
+		<mx:Button x="463" y="92" label="Full Screen" id="fullScreenBtn"/>		
+
+	
+</mx:Application>

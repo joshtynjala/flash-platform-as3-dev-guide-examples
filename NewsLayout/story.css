@@ -1,0 +1,23 @@
+/* CSS file */
+p {
+    font-family: Georgia, "Times New Roman", Times, _serif;
+    font-size: 12;
+    leading: 2;
+    text-align: justify;
+    indent: 24;
+}
+
+h1 {
+    font-family: Verdana, Arial, Helvetica, _sans;
+    font-size: 20;
+    font-weight: bold;
+    color: #000099;
+    text-align: left;
+}
+
+h2 {
+    font-family: Verdana, Arial, Helvetica, _sans;
+    font-size: 16;
+    font-weight: normal;
+    text-align: left;
+}

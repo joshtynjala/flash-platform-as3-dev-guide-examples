@@ -1,0 +1,136 @@
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+<title>IntrovertIMApp</title>
+<script language="javascript">AC_FL_RunContent = 0;</script>
+<script src="AC_OETags.js" language="javascript"></script>
+<script language="JavaScript">
+	<!--
+	// ------- Private vars -------
+	var jsReady = false;
+	var swfReady = false;
+
+	// ------- functions called by ActionScript -------
+	// called to check if the page has initialized and JavaScript is available
+	function isReady() {
+		return jsReady;
+	}
+
+	// called to notify the page that the SWF has set it's callbacks
+	function setSWFIsReady() {
+		// record that the SWF has registered it's functions (i.e. that JavaScript
+		// can safely call the ActionScript functions)
+		swfReady = true;
+		
+		updateStatus();
+	}
+	
+	// called to notify the page of a new message
+	function newMessage(value) {
+		// append the message text to the end of the transcript
+		document.forms["imForm"].transcript.value += "The Other Person: " + value + "\n";
+	}
+
+	// called to notify the page that the SWF user's availability (status) has changed
+	function statusChange() {
+		updateStatus();
+	}
+
+
+	// ------- event handling -------
+	// called by the onload event of the <body> tag
+	function pageInit() {
+		// record that JavaScript is ready to go.
+		jsReady = true;
+	}
+
+	// called when the "Send" button is pressed; the value in the messageText text field
+	// is passed in as a parameter.
+	function sendMessage(message) {
+		if (swfReady)
+		{
+			// if the SWF has registered it's functions, add the message text to the
+			// local transcript, send it to the SWF file to be processed there, and clear
+			// the message text field.
+			document.forms["imForm"].transcript.value += "You: " + message + "\n";
+			document.forms["imForm"].messageText.value = "";
+			getSWF("IntrovertIMApp").newMessage(message);
+		}
+	}
+
+
+	// ------- utility functions -------
+	// if the SWF has indicated it's ready for communication, calls the ActionScript
+	// function to get the current "availability" status and writes it into the text field.
+	function updateStatus() {
+		if (swfReady) {
+			var currentStatus = getSWF("IntrovertIMApp").getStatus();
+			document.forms["imForm"].status.value = currentStatus;
+		}
+	}
+
+	// Gets a reference to the specified SWF file by checking which browser is
+	// being used and using the appropriate JavaScript.
+	// Unfortunately, newer approaches such as using getElementByID() don't
+	// work well with Flash Player/ExternalInterface.
+	function getSWF(movieName) {
+		if (navigator.appName.indexOf("Microsoft") != -1) {
+			return window[movieName];
+		} else {
+			return document[movieName];
+		}
+	}
+	//-->
+</script>
+</head>
+<body onload="pageInit()">
+	<!--url's used in the movie-->
+	<!--text used in the movie-->
+	<!-- saved from url=(0013)about:internet -->
+	<script language="javascript">
+		if (AC_FL_RunContent == 0) {
+			alert("This page requires AC_OETags.js.");
+		} else {
+			AC_FL_RunContent(
+				'codebase', 'http://download.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=9,0,0,0',
+				'width', '600',
+				'height', '450',
+				'src', 'IntrovertIMApp',
+				'quality', 'high',
+				'pluginspage', 'http://www.macromedia.com/go/getflashplayer',
+				'align', 'middle',
+				'play', 'true',
+				'loop', 'true',
+				'scale', 'showall',
+				'wmode', 'window',
+				'devicefont', 'false',
+				'id', 'IntrovertIMApp',
+				'bgcolor', '#ffffff',
+				'name', 'IntrovertIMApp',
+				'menu', 'true',
+				'allowScriptAccess','sameDomain',
+				'movie', 'IntrovertIMApp.swf',
+				'salign', ''
+				); //end AC code
+		}
+	</script>
+	<noscript>
+		<object classid="clsid:d27cdb6e-ae6d-11cf-96b8-444553540000" codebase="http://download.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=9,0,0,0" width="600" height="450" id="IntrovertIMApp" align="middle">
+		<param name="allowScriptAccess" value="sameDomain" />
+		<param name="movie" value="IntrovertIMApp.swf" /><param name="quality" value="high" /><param name="bgcolor" value="#ffffff" />	<embed src="IntrovertIMApp.swf" quality="high" bgcolor="#ffffff" width="600" height="450" name="IntrovertIMApp" align="middle" allowScriptAccess="sameDomain" type="application/x-shockwave-flash" pluginspage="http://www.macromedia.com/go/getflashplayer" />
+		</object>
+	</noscript>
+	<form name="imForm" onSubmit="return false;">
+		<div>
+			The Other Person's status: <input type="text" name="status" value="" readonly="true" />
+		</div>
+		<div>
+			<textarea cols="60" rows="10" name="transcript" readonly="true" style="width: 600px; height: 200px;"></textarea>
+		</div>
+		<div>
+			<input type="text" name="messageText" value="" style="width: 500px" />
+			<input type="button" value="Send" onclick="sendMessage(this.form.messageText.value);" />
+		</div>
+	</form>
+</body>
+</html>

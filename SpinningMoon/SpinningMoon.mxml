@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:Application
+	xmlns:mx="http://www.adobe.com/2006/mxml"
+	layout="absolute"
+	creationComplete="initApp()"> 
+
+	<mx:Script>
+		<![CDATA[
+			import com.example.programmingas3.moon.MoonSphere;
+			import flash.display.StageAlign;
+			import flash.display.StageScaleMode;
+
+			private function initApp():void {
+				var moon:MoonSphere = new MoonSphere();
+				function showMoon(event:Event):void
+				{
+					container.addChild(moon);
+				}
+				moon.addEventListener(Event.COMPLETE, showMoon);
+			}			
+		]]>
+	</mx:Script>	
+	
+	<mx:UIComponent id="container" />
+</mx:Application>

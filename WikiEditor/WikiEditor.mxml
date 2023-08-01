@@ -1,0 +1,60 @@
+﻿<mx:Application 
+	xmlns:mx="http://www.adobe.com/2006/mxml" 
+	xmlns="*" 
+	layout="vertical" 
+	paddingTop="0"
+	creationComplete="initApp()" >
+	
+	<mx:Script>
+		<![CDATA[
+			import com.example.programmingas3.wikiEditor.WikiParser; 
+			import com.example.programmingas3.wikiEditor.CurrencyConverter; 
+			import com.example.programmingas3.wikiEditor.URLParser; 
+			public var wikiParser:WikiParser;
+			
+			public function initApp():void 
+			{
+				wikiParser = new WikiParser();
+
+				inputText.text = wikiParser.wikiData;
+				outputText.htmlText = wikiParser.parseWikiString(inputText.text)
+			}
+			
+			public function testClicked():void 
+			{
+				outputText.htmlText = wikiParser.parseWikiString(inputText.text)
+				if (dollarToEuro.selected) 
+				{
+					outputText.htmlText = CurrencyConverter.usdToEuro(outputText.htmlText);
+				} 
+				
+				if (urlToATag.selected) 
+				{
+					outputText.htmlText = URLParser.urlToATag(outputText.htmlText);
+				} 
+			}	
+		]]>
+	</mx:Script>
+		
+	<mx:Label id="title" text="Wiki Editor Example" fontSize="24" fontStyle="bold" />
+	<mx:Label id="subtitle" text="From Programming ActionScript 3.0, Chapter 9: Using regular expressions" fontSize="12" />
+
+	<mx:Panel width="100%" height="100%" title="Wiki Input" >
+
+		<mx:TextArea id="inputText" fontFamily="Courier" width="100%" height="100%" />
+			
+		<mx:HBox>
+			<mx:CheckBox label="$ to €" id="dollarToEuro" />
+			<mx:CheckBox label="URLs to &lt;a&gt;" id="urlToATag" />
+			<mx:Button label="Test" id="testButton" click="testClicked()" />		
+		</mx:HBox>
+		
+	</mx:Panel>	
+
+	<mx:Panel width="100%" height="100%" title="HTML Output" >	
+
+		<mx:TextArea id="outputText" width="100%" height="100%" />
+		
+	</mx:Panel>
+		
+</mx:Application>

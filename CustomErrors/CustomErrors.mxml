@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:Application xmlns:mx="http://www.adobe.com/2006/mxml" 
+        creationComplete="initApp();" >
+        
+	<mx:Script>
+		<![CDATA[
+			import com.example.programmingas3.errors.*;
+			
+			[Bindable]
+			public var employeeXML:XML;
+			
+			private function initApp():void 
+			{
+				employeeXML =  <employee id="12345">
+            					   <firstName>John</firstName>
+            					   <lastName>Doe</lastName>
+            					   <costCenter>12345</costCenter>
+            					   <costCenter>67890</costCenter>
+            					</employee>;
+
+				statusText.text = "Click the Validate button to check the XML";
+            	hideButtons();
+			}
+			
+            public function validateData():void
+            {
+                try
+                {
+                    var tempXML:XML = XML(xmlText.text);
+                    
+					Validator.validateEmployeeXML(tempXML);
+					
+					statusText.text = "The XML was successfully validated.";
+				}
+				catch (error:FatalError)
+				{
+					showFatalError(error);
+				}
+				catch (error:WarningError)
+				{
+					showWarningError(error);
+				}
+				catch (error:Error)
+				{
+					showGenericError(error);
+				}
+            }
+            
+    		public function showFatalError(error:FatalError):void
+    		{
+				var message:String = error.message + "\n\n";
+				var title:String = error.getTitle();
+				statusText.text = message + " " + title + "\n\nThis application has ended.";
+				this.xmlText.enabled = false;
+				this.validateBtn.enabled = false;
+				hideButtons();
+    		}
+    		
+    		public function showWarningError(error:WarningError):void
+    		{
+				var message:String = error.message + "\n\n" + "Do you want to exit this application?";
+				showButtons();
+				var title:String = error.getTitle();
+				statusText.text = message;
+    		}
+    		
+    		public function showGenericError(error:Error):void
+    		{
+    			statusText.text = error.message + "\n\nEncountered an unknown error: " + error.name;
+    		}
+    		
+    		private function showButtons():void
+    		{
+    			yesButton.visible = true;
+    			noButton.visible = true;
+    		}
+    		
+    		private function hideButtons():void
+    		{
+    			yesButton.visible = false;
+    			noButton.visible = false;
+    		}
+    		
+      		private function closeHandler(event:MouseEvent):void 
+      		{
+    			switch (event.target)
+    			{
+    				case yesButton:
+    					showFatalError(new FatalError(9999));
+    					break;
+    				case noButton:
+			 			statusText.text = "";
+						hideButtons();
+			   			break;
+    			}
+    		}
+		]]>
+	</mx:Script>
+	
+	<mx:Label id="title" text="ApplicationError Example" fontSize="24" fontStyle="bold"/>
+	<mx:Label id="subtitle" text="From Programming ActionScript 3.0, Chapter 8: Handling errors" fontSize="12"/>
+	<mx:HBox width="100%">
+		<mx:VBox height="100%" horizontalAlign="center">
+			<mx:TextArea id="xmlText" text="{employeeXML}" width="250" height="200" fontSize="12"/>
+			<mx:Button id="validateBtn" width="100" label="Validate" click="validateData()"/>
+		</mx:VBox>
+		<mx:VBox height="100%" horizontalAlign="center">
+			<mx:TextArea id="statusText" width="250" height="200" fontSize="12"/>
+			<mx:HBox>
+				<mx:Button id="yesButton" width="65" label="Yes" click="closeHandler(event)"/>
+				<mx:Button id="noButton" width="65" label="No" click="closeHandler(event)"/>
+			</mx:HBox>
+		</mx:VBox>
+	</mx:HBox>
+</mx:Application>
